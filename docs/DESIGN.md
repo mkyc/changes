@@ -40,6 +40,21 @@ source:
     message: "fix(widget): handle edge case"
 ```
 
+Another example for repository initialization (`event: init`):
+
+```yaml
+# .changes/0000-init.yaml
+id: "0000-init"
+package: "."
+event: init
+increment: none
+date: "2026-06-18"
+summary: "1.2.3"
+details: |
+  Start tracking changes with `changes`. 
+  Last release before adopting the tool was 1.2.3.
+```
+
 - **`increment: none`** — included in changelog (optional) but does **not** contribute to version bump.
 - **`event: change`** — change entry is a code change.
 - **`event: init`** — change entry is an initial version number ie.: when we introduce changelog in existing repo with previous versions.
