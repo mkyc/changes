@@ -1,2 +1,2 @@
 # changes
-code versioning operations
+changelog generation automation
