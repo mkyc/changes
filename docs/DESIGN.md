@@ -24,8 +24,8 @@ One file per logical change, stored under `.changes/` (name/format TBD):
 # .changes/0001-add-widget-api.yaml  (example shape)
 id: "0001-add-widget-api"
 package: "."                    # monorepo: path or package name; single repo: "."
-event: code                     # code | initial
-type: minor                     # major | minor | patch | none
+event: change                     # change | init
+increment: minor                # major | minor | patch | none
 date: "2026-06-17"
 summary: "Add widget API endpoint"
 details: |
@@ -34,13 +34,15 @@ breaking: false
 issues: ["#42"]
 authors: ["@alice"]
 source:
-  commits: ["abc1234", "def5678"]   # optional provenance from `propose`
-  conventional: "feat(widget): add API"  # optional
+  - hash: "abc1234"
+    message: "feat(widget): add API"
+  - hash: "def5678"
+    message: "fix(widget): handle edge case"
 ```
 
-- **`type: none`** — included in changelog (optional) but does **not** contribute to version bump.
-- **`event: code`** — change entry is a code change.
-- **`event: initial`** — change entry is an initial release tag ie.: when we introduce changelog in existing repo.
+- **`increment: none`** — included in changelog (optional) but does **not** contribute to version bump.
+- **`event: change`** — change entry is a code change.
+- **`event: init`** — change entry is an initial version number ie.: when we introduce changelog in existing repo with previous versions.
 - **Sequential IDs** (`0001`, `0002`, …) keep ordering stable and diff-friendly.
 - Files are the **source of truth** for release notes; commits are hints for `propose`, not the changelog itself.
 
@@ -64,9 +66,9 @@ Monorepo: aggregate **per package** independently.
 | `changes apply [--package <path>]` | Regenerate `CHANGELOG.md` (and per-package changelogs in monorepo) from `.changes/` |
 | `changes check` | Validate changesets schema, IDs, ordering; verify `apply` is clean (no drift) |
 
-`propose` maps conventional commit prefixes to suggested `type` (configurable):
+`propose` maps conventional commit prefixes to suggested `increment` (configurable):
 
-| Prefix | Suggested type |
+| Prefix | Suggested increment |
 |--------|----------------|
 | `feat!`, `BREAKING CHANGE` | major |
 | `feat` | minor |
