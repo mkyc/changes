@@ -2,6 +2,10 @@
 
 Small, language-independent Go CLI for changelog generation.
 
+## Story
+
+On branch I produce nice conventional commits. So then when time comes to prepare PR and finish my work I just use `changes propose` to generate a draft changeset file / files. Then I edit the draft and commit it. When my PR is ready I use `changes apply` to generate a changelog and commit it. 
+
 ## Goals
 
 | Goal | Notes |
@@ -78,12 +82,12 @@ Monorepo: aggregate **per package** independently.
 
 `propose` maps conventional commit prefixes to suggested `increment` (configurable):
 
-| Prefix | Suggested increment |
-|--------|---------------------|
-| `feat!`, `BREAKING CHANGE` | major |
-| `feat` | minor |
-| `fix` | patch |
-| `docs`, `chore`, `refactor`, `test`, `ci` | none |
+| Prefix                                                               | Suggested increment |
+|----------------------------------------------------------------------|---------------------|
+| `feat!`, `BREAKING CHANGE`                                           | major               |
+| `feat`                                                               | minor               |
+| `fix`, `perf`, `docs`, `style`, `refactor`, `test`, `build`, `chore` | patch               |
+| `ci`                                                                 | none                |
 
 User always edits the draft before committing.
 
@@ -115,9 +119,10 @@ packages:
     tag_prefix: "v"
 since: main
 conventional:
-  minor: ["feat"]
-  patch: ["fix"]
-  none: ["docs", "chore", "refactor", "test", "ci"]
+  major: [ "feat!", "BREAKING CHANGE" ]
+  minor: [ "feat" ]
+  patch: [ "fix", "perf", "docs", "style", "refactor", "test", "build", "chore" ]
+  none: [ "ci" ]
 ```
 
 ## Open questions
@@ -127,8 +132,6 @@ conventional:
 3. **Changelog format** — Keep a Changelog style, or configurable template?
 
 ---
-
-*Draft for internal discussion. Commands, paths, and schema are proposals, not implementation.*
 
 ## Inspirations
 
