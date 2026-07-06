@@ -26,7 +26,7 @@ Scenario files are numbered and named by theme (`01-single-repo-happy-path.md`, 
 | **Init** | Detect latest release tag; emit `.changes/0000-init.yaml` |
 | **Propose** | Inspect git commits since a ref; emit draft change file(s) |
 | **Apply** | Regenerate `CHANGELOG.md` from committed change files |
-| **Check** | Validate schema, ID ordering, and that apply would not drift committed output |
+| **Check** | Validate schema, unique sequence IDs, ordering, and that apply would not drift committed output |
 
 ## Inputs
 
@@ -66,7 +66,8 @@ These must hold regardless of user actions or execution order:
 5. **None does not bump** — `increment: none` entries appear in the changelog but do not affect semver.
 6. **Propose is non-destructive** — propose creates or updates draft change files only; it does not modify `CHANGELOG.md` or rewrite existing committed change files without explicit user action.
 7. **Check detects drift** — if committed `CHANGELOG.md` differs from what `apply` would produce, `check` fails.
-8. **Single-repo default package** — when no monorepo config exists, all changes use `package: "."`.
+8. **Unique sequence IDs** — at most one change file per numeric sequence prefix (`0000`, `0001`, …) under `.changes/` and `.changes/released/` combined; duplicates fail `check`.
+9. **Single-repo default package** — when no monorepo config exists, all changes use `package: "."`.
 
 ## Scenario index
 
@@ -74,20 +75,10 @@ These must hold regardless of user actions or execution order:
 |---|------|----------|--------|
 | 01 | [single-repo-happy-path](scenarios/01-single-repo-happy-path.md) | Happy path | draft |
 
+## Decisions
+
+Product and behavior decisions live in [DECISIONS.md](DECISIONS.md). Scenario-specific pins (exact file contents, stdout) stay in individual scenario files.
+
 ## Open questions
 
-Decisions that must be clarified before implementation. New scenarios may add items here.
-
-1. **Consumed changesets** — archive/delete after release, or move to `.changes/released/`?
-2. **Concurrent PRs** — how to handle two PRs both allocating `0005-*.yaml`?
-3. **Changelog format configurability** — scenario 01 pins Keep a Changelog 1.1.0; should other templates be supported later?
-4. **Version string source** — is the numeric version always computed from `init` + increments, or can it be overridden in config or CLI?
-5. **Default `--since`** — when config omits `since`, is the default `main`, current branch upstream, or merge-base with default branch?
-6. **Init without prior tag** — what should `0000-init.yaml` contain when the repo has no releases yet (`0.0.0`, `0.1.0`, or require explicit user input)?
-7. **Apply side effects** — does `apply` only write `CHANGELOG.md`, or also emit/version-bump other files (e.g. `package.json`)?
-
-**Resolved in scenario 01**
-
-- **Propose granularity** — one change file per propose run, grouping all commits since `--since` that are not already referenced in an existing change file's `source`.
-- **Changelog format** — Keep a Changelog 1.1.0 (exact template pinned in scenario file).
-- **Check output** — exit code `0`, stdout `ok\n`, stderr empty.
+None currently. Add new items here when scenarios surface unresolved behavior; move to [DECISIONS.md](DECISIONS.md) once decided.

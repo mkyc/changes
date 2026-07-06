@@ -125,11 +125,9 @@ conventional:
   none: [ "ci" ]
 ```
 
-## Open questions
+## Decisions
 
-1. **Consumed changesets** — archive/delete after release, or move to `.changes/released/`?
-2. **Concurrent PRs** — how to handle two PRs both allocating `0005-*.yaml`?
-3. **Changelog format** — Keep a Changelog style, or configurable template?
+See [spec/DECISIONS.md](spec/DECISIONS.md) for resolved design choices (released changeset location, duplicate ID handling, changelog format, version computation, defaults, apply scope).
 
 ---
 
