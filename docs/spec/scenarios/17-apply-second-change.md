@@ -1,14 +1,27 @@
-# Scenario 17 — Release moves changesets to released
+# Scenario 17 — Apply second change
 
-After release, pending change files move to `.changes/released/` and `apply` promotes them into a versioned changelog section.
+After a prior apply cycle, a new propose + apply bumps the version and archives the next changeset.
 
-**Scope:** state transition, [D001](../DECISIONS.md#d001-consumed-changesets), [D004](../DECISIONS.md#d004-version-computation).
+**Scope:** [D004](../DECISIONS.md#d004-version-computation), [D007](../DECISIONS.md#d007-apply-behavior), sequence continuity.
 
 ---
 
 ## Given
 
+### Repository
+
+- Default branch `main`; latest tag `v1.3.0`.
+- Branch `fix/typo` with one commit not on `main`:
+
+  | Hash (short) | Author date | Message |
+  |--------------|-------------|---------|
+  | `xyz9999` | `2026-06-21` | `fix(ui): correct button label` |
+
+- Working tree clean; current branch `fix/typo`.
+
 ### Filesystem
+
+State after [scenario 01](01-single-repo-happy-path.md):
 
 `.changes/0000-init.yaml`:
 
@@ -24,7 +37,7 @@ details: |
   Last release before adopting the tool was 1.2.3.
 ```
 
-`.changes/0001-add-widget-api.yaml`:
+`.changes/released/0001-add-widget-api.yaml`:
 
 ```yaml
 id: "0001-add-widget-api"
@@ -35,15 +48,18 @@ date: "2026-06-17"
 summary: "Add widget API endpoint"
 details: |
   Adds REST endpoint for widget creation.
+  Includes nil-input guard on the handler.
 breaking: false
 issues: ["#42"]
 authors: ["@alice"]
 source:
   - hash: "abc1234"
     message: "feat(widget): add API endpoint"
+  - hash: "def5678"
+    message: "fix(widget): handle nil input"
 ```
 
-`CHANGELOG.md` (pre-release, with `[Unreleased]`):
+`CHANGELOG.md`:
 
 ```markdown
 # Changelog
@@ -53,13 +69,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-06-19
 
 ### Added
 
 - Add widget API endpoint (#42) (@alice)
 
   Adds REST endpoint for widget creation.
+  Includes nil-input guard on the handler.
 
 ## [1.2.3] - 2026-06-18
 
@@ -69,37 +86,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Environment
 
-- Release move and `changes apply` run at `2026-06-20T10:00:00Z`.
+- `changes propose` runs at `2026-06-21T10:00:00Z`.
+- `changes apply` runs at `2026-06-21T10:01:00Z`.
 
 ---
 
-## Step 1 — move consumed changeset
+## Step 1 — propose
 
-**When** the user runs:
+**When**
 
 ```text
-mkdir -p .changes/released
-mv .changes/0001-add-widget-api.yaml .changes/released/0001-add-widget-api.yaml
+changes propose
 ```
 
-**Then** filesystem contains:
+**Then** file `.changes/0002-correct-button-label.yaml` is created with exactly:
 
-```text
-.
-├── .changes/
-│   ├── 0000-init.yaml
-│   └── released/
-│       └── 0001-add-widget-api.yaml
-└── CHANGELOG.md
+```yaml
+id: "0002-correct-button-label"
+package: "."
+event: change
+increment: patch
+date: "2026-06-21"
+summary: "Correct button label"
+details: |
+  fix(ui): correct button label
+breaking: false
+source:
+  - hash: "xyz9999"
+    message: "fix(ui): correct button label"
 ```
 
 **And**
 
-- `.changes/released/0001-add-widget-api.yaml` content is byte-for-byte identical to the Given `0001` file.
+- Exit code is `0`.
+- Stdout is empty.
+- Stderr is empty.
+- Sequence is `0002` (continues after `0001` in `.changes/released/`).
+
+**When** the user commits `.changes/0002-correct-button-label.yaml` unchanged.
 
 ---
 
-## Step 2 — apply after release
+## Step 2 — apply
 
 **When**
 
@@ -117,13 +145,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2026-06-20
+## [1.3.1] - 2026-06-21
+
+### Fixed
+
+- Correct button label
+
+  fix(ui): correct button label
+
+## [1.3.0] - 2026-06-19
 
 ### Added
 
 - Add widget API endpoint (#42) (@alice)
 
   Adds REST endpoint for widget creation.
+  Includes nil-input guard on the handler.
 
 ## [1.2.3] - 2026-06-18
 
@@ -136,9 +173,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
-- No `## [Unreleased]` heading appears in `CHANGELOG.md`.
-- Computed next release version is `1.3.0` (no pending changes remain).
-- Only `CHANGELOG.md` is modified; released change file is not moved or edited.
+- Release version written to changelog is `1.3.1` (`1.3.0` + one `patch`).
+- `.changes/0002-correct-button-label.yaml` is moved to `.changes/released/0002-correct-button-label.yaml`.
 
 ---
 
@@ -170,6 +206,7 @@ ok
 ├── .changes/
 │   ├── 0000-init.yaml
 │   └── released/
-│       └── 0001-add-widget-api.yaml
+│       ├── 0001-add-widget-api.yaml
+│       └── 0002-correct-button-label.yaml
 └── CHANGELOG.md
 ```

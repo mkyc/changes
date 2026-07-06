@@ -25,8 +25,24 @@ Scenario files are numbered and named by theme (`01-single-repo-happy-path.md`, 
 | **Increment** | Suggested semver bump: `major`, `minor`, `patch`, or `none` |
 | **Init** | Detect latest release tag; emit `.changes/0000-init.yaml` |
 | **Propose** | Inspect git commits since a ref; emit draft change file(s) |
-| **Apply** | Regenerate `CHANGELOG.md` from committed change files |
+| **Apply** | Regenerate `CHANGELOG.md`, compute version, move pending change files to `.changes/released/` |
 | **Check** | Validate schema, unique sequence IDs, ordering, and that apply would not drift committed output |
+
+## Workflow
+
+Minimal day-to-day flow ([DESIGN.md](../DESIGN.md)):
+
+```
+propose  →  edit & commit .changes/000N.yaml  →  apply  →  commit CHANGELOG.md + moved changesets
+```
+
+`apply` does both changelog generation and archival: pending files land in `.changes/released/` and the changelog gets a `## [X.Y.Z] - <date>` section for the computed version ([D004](DECISIONS.md#d004-version-computation), [D007](DECISIONS.md#d007-apply-behavior)).
+
+| Location | Contents |
+|----------|----------|
+| `.changes/0000-init.yaml` | Adoption baseline; always in root |
+| `.changes/000N-*.yaml` | **Pending** changes awaiting the next `apply` |
+| `.changes/released/000N-*.yaml` | **Applied** changes; already reflected in `CHANGELOG.md` |
 
 ## Inputs
 
@@ -45,8 +61,8 @@ Scenario files are numbered and named by theme (`01-single-repo-happy-path.md`, 
 ## State
 
 - **Working tree** — draft files from propose, uncommitted edits
-- **Committed `.changes/`** — authoritative change history for apply/check
-- **`CHANGELOG.md`** — derived artifact; must match apply output when check passes
+- **Committed `.changes/`** — pending change files (root) and released archive (`released/`)
+- **`CHANGELOG.md`** — derived artifact; version sections written by `apply`
 - **Git refs** — used only by propose to discover new commits, not to build the changelog directly
 
 ## External dependencies
@@ -67,7 +83,7 @@ These must hold regardless of user actions or execution order:
 6. **Propose is non-destructive** — propose creates or updates draft change files only; it does not modify `CHANGELOG.md` or rewrite existing committed change files without explicit user action.
 7. **Check detects drift** — if committed `CHANGELOG.md` differs from what `apply` would produce, `check` fails.
 8. **Unique sequence IDs** — at most one change file per numeric sequence prefix (`0000`, `0001`, …) under `.changes/` and `.changes/released/` combined; duplicates fail `check`.
-9. **Contiguous sequences** — pending change prefixes under `.changes/` (excluding init) start at `0001` with no gaps; gaps fail `check`.
+9. **Contiguous sequences** — sequence numbers are unique across `.changes/` and `.changes/released/` combined ([D002](#d002-concurrent-pr-sequence-collisions)). Pending files continue the sequence after the highest released number with no gaps ([D012](#d012-sequence-gap-validation)).
 10. **Single-repo default package** — when no monorepo config exists, all changes use `package: "."`.
 
 ## Scenario index
@@ -75,7 +91,7 @@ These must hold regardless of user actions or execution order:
 | # | File | Category |
 |---|------|----------|
 | 01 | [single-repo-happy-path](scenarios/01-single-repo-happy-path.md) | Happy path |
-| 02 | [init-no-prior-tag](scenarios/02-init-no-prior-tag.md) | Boundary / init |
+| 02 | [init-no-prior-tag](scenarios/02-init-no-prior-tag.md) | Init + propose + apply (no tag) |
 | 03 | [propose-breaking-major](scenarios/03-propose-breaking-major.md) | Propose / conventional commits |
 | 04 | [propose-patch-only](scenarios/04-propose-patch-only.md) | Propose / conventional commits |
 | 05 | [propose-none-increment](scenarios/05-propose-none-increment.md) | Propose / no-release |
@@ -90,7 +106,7 @@ These must hold regardless of user actions or execution order:
 | 14 | [check-changelog-drift](scenarios/14-check-changelog-drift.md) | Check / drift + recovery |
 | 15 | [check-invalid-schema](scenarios/15-check-invalid-schema.md) | Check / invalid input |
 | 16 | [check-sequence-gap](scenarios/16-check-sequence-gap.md) | Check / ordering |
-| 17 | [release-move-to-released](scenarios/17-release-move-to-released.md) | Release / state transition |
+| 17 | [apply-second-change](scenarios/17-apply-second-change.md) | Apply / second cycle |
 | 18 | [not-a-git-repository](scenarios/18-not-a-git-repository.md) | Missing dependency |
 | 19 | [init-already-exists](scenarios/19-init-already-exists.md) | Init / error |
 | 20 | [major-wins-aggregation](scenarios/20-major-wins-aggregation.md) | Version aggregation |
@@ -120,4 +136,14 @@ Product and behavior decisions live in [DECISIONS.md](DECISIONS.md). Scenario-sp
 
 ## Open questions
 
-None currently. Add new items here when scenarios surface unresolved behavior; move to [DECISIONS.md](DECISIONS.md) once decided.
+1. **Large history on adoption** — when `changes init` runs in a repo that already has extensive history (e.g. 10 000 commits on `main`, no tags), what should `changes propose` do?
+   - Ignore all pre-init history and only track commits after adoption (current assumption in [scenario 02](scenarios/02-init-no-prior-tag.md))?
+   - Backfill one or many change files from the full history?
+   - Require an explicit `--since` (or other flag) before proposing against old history?
+   - Refuse / warn when commit count exceeds a threshold?
+
+2. **Cleanup of released change files** — may users delete archives under `.changes/released/` after some time? If so, how does `apply`/`check` reconstruct history?
+
+3. **Why 0000-init.yaml** stays in root?
+
+Add new items here when scenarios surface unresolved behavior; move to [DECISIONS.md](DECISIONS.md) once decided.

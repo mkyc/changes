@@ -8,13 +8,13 @@ Adopt `changes` in an existing single-package repository, propose a changeset fr
 
 | ID | How it shows up here |
 |----|----------------------|
-| [D001](../DECISIONS.md#d001-consumed-changesets) | Pending changes stay under `.changes/`; `.changes/released/` does not exist yet |
-| [D002](../DECISIONS.md#d002-concurrent-pr-sequence-collisions) | Step 5: `check` passes with unique sequences `0000` and `0001` |
+| [D001](../DECISIONS.md#d001-consumed-changesets) | Step 4: pending file moves to `.changes/released/` |
+| [D002](../DECISIONS.md#d002-concurrent-pr-sequence-collisions) | Step 5: `check` passes; `0001` only in `released/` |
 | [D003](../DECISIONS.md#d003-changelog-format) | Step 4: exact Keep a Changelog 1.1.0 output |
-| [D004](../DECISIONS.md#d004-version-computation) | Step 1: `init` reads `1.2.3` from tag; step 4: next version computed as `1.3.0` |
+| [D004](../DECISIONS.md#d004-version-computation) | Step 4: writes `## [1.3.0]` from baseline `1.2.3` + `minor` |
 | [D005](../DECISIONS.md#d005-default-since-ref) | Step 2: `changes propose` with no `--since` (defaults to `main`) |
 | [D006](../DECISIONS.md#d006-init-without-prior-tag) | Not exercised — repo has tag `v1.2.3` |
-| [D007](../DECISIONS.md#d007-apply-side-effects) | Step 4: only `CHANGELOG.md` is written |
+| [D007](../DECISIONS.md#d007-apply-behavior) | Step 4: writes changelog and moves changeset |
 | [D008](../DECISIONS.md#d008-propose-granularity) | Step 2: one file grouping both commits |
 | [D009](../DECISIONS.md#d009-check-success-output) | Step 5: exit `0`, stdout `ok` |
 
@@ -92,7 +92,7 @@ details: |
 - `summary` is derived from the latest release tag `v1.2.3` ([D004](../DECISIONS.md#d004-version-computation)).
 - No other files are created or modified.
 - `CHANGELOG.md` does not exist.
-- `.changes/released/` does not exist ([D001](../DECISIONS.md#d001-consumed-changesets)).
+- `.changes/released/` does not exist before step 4 ([D001](../DECISIONS.md#d001-consumed-changesets)).
 
 **When** the user commits `.changes/0000-init.yaml`.
 
@@ -209,7 +209,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-06-19
 
 ### Added
 
@@ -229,12 +229,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
-- Only `CHANGELOG.md` is created or modified; no other files are written ([D007](../DECISIONS.md#d007-apply-side-effects)).
 - `.changes/0000-init.yaml` is unchanged.
-- `.changes/0001-add-widget-api.yaml` is unchanged.
-- Computed next release version is `1.3.0` — baseline `1.2.3` from init ([D004](../DECISIONS.md#d004-version-computation)) plus one `minor` increment from `0001`; not written into `CHANGELOG.md` until release.
+- `.changes/0001-add-widget-api.yaml` is moved to `.changes/released/0001-add-widget-api.yaml` with identical content ([D001](../DECISIONS.md#d001-consumed-changesets), [D007](../DECISIONS.md#d007-apply-behavior)).
+- Release version written to changelog is `1.3.0` ([D004](../DECISIONS.md#d004-version-computation)).
 
-**When** the user commits `CHANGELOG.md`.
+**When** the user commits `CHANGELOG.md` and the moved changeset under `.changes/released/`.
 
 **Then** filesystem contains:
 
@@ -242,7 +241,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 .
 ├── .changes/
 │   ├── 0000-init.yaml
-│   └── 0001-add-widget-api.yaml
+│   └── released/
+│       └── 0001-add-widget-api.yaml
 └── CHANGELOG.md
 ```
 
@@ -270,12 +270,12 @@ ok
 **And** all of the following hold (otherwise `check` would fail):
 
 - Change file schema is valid.
-- Sequence prefixes are unique: `0000` and `0001` each appear on exactly one file under `.changes/` ([D002](../DECISIONS.md#d002-concurrent-pr-sequence-collisions)).
-- Sequence prefixes have no gaps: `0000`, `0001`.
+- Sequence prefixes are unique: `0000` in root; `0001` only under `.changes/released/` ([D002](../DECISIONS.md#d002-concurrent-pr-sequence-collisions)).
+- No pending change files remain under `.changes/` root (only init).
 - `CHANGELOG.md` matches exactly what `changes apply` would write (no drift).
 - `CHANGELOG.md` is unchanged on disk after `check`.
 - `.changes/0000-init.yaml` is unchanged.
-- `.changes/0001-add-widget-api.yaml` is unchanged.
+- `.changes/released/0001-add-widget-api.yaml` is unchanged.
 
 ---
 
@@ -287,11 +287,12 @@ After all steps and commits:
 .
 ├── .changes/
 │   ├── 0000-init.yaml
-│   └── 0001-add-widget-api.yaml
+│   └── released/
+│       └── 0001-add-widget-api.yaml
 └── CHANGELOG.md
 ```
 
-With file contents exactly as specified in steps 1–4. No `.changes/released/` directory ([D001](../DECISIONS.md#d001-consumed-changesets)).
+With file contents exactly as specified in steps 1–4.
 
 ---
 
@@ -303,6 +304,4 @@ With file contents exactly as specified in steps 1–4. No `.changes/released/` 
 - `init` with no prior release tag ([D006](../DECISIONS.md#d006-init-without-prior-tag))
 - `major`, `patch`-only, or `none`-only increments
 - Breaking-change commits (`feat!`, `BREAKING CHANGE` footer)
-- Post-release move of consumed changesets to `.changes/released/` ([D001](../DECISIONS.md#d001-consumed-changesets))
-
-These will appear in later scenario files.
+- Second apply cycle — [scenario 17](17-apply-second-change.md)

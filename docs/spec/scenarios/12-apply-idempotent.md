@@ -1,8 +1,8 @@
 # Scenario 12 — Apply is idempotent
 
-Running `apply` twice with unchanged inputs produces identical output.
+Running `apply` twice with no new pending changes produces identical output.
 
-**Scope:** repeated execution / idempotency, [D007](../DECISIONS.md#d007-apply-side-effects).
+**Scope:** repeated execution / idempotency, [D007](../DECISIONS.md#d007-apply-behavior).
 
 ---
 
@@ -24,7 +24,7 @@ details: |
   Last release before adopting the tool was 1.2.3.
 ```
 
-`.changes/0001-add-widget-api.yaml`:
+`.changes/released/0001-add-widget-api.yaml`:
 
 ```yaml
 id: "0001-add-widget-api"
@@ -41,17 +41,7 @@ source:
     message: "feat(widget): add API endpoint"
 ```
 
----
-
-## Step 1 — apply (first run)
-
-**When**
-
-```text
-changes apply
-```
-
-**Then** file `CHANGELOG.md` is created with exactly:
+`CHANGELOG.md`:
 
 ```markdown
 # Changelog
@@ -61,7 +51,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-06-19
 
 ### Added
 
@@ -75,15 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Last release before adopting the tool was 1.2.3.
 ```
 
-**And**
-
-- Exit code is `0`.
-- Stdout is empty.
-- Stderr is empty.
+(no pending change files under `.changes/` root)
 
 ---
 
-## Step 2 — apply (second run)
+## Step 1 — apply (second run)
 
 **When**
 
@@ -93,9 +79,9 @@ changes apply
 
 **Then**
 
-- `CHANGELOG.md` is byte-for-byte identical to the content after step 1.
+- `CHANGELOG.md` is byte-for-byte identical to the Given content.
 - `.changes/0000-init.yaml` is unchanged.
-- `.changes/0001-add-widget-api.yaml` is unchanged.
+- `.changes/released/0001-add-widget-api.yaml` is unchanged.
 
 **And**
 
@@ -105,7 +91,7 @@ changes apply
 
 ---
 
-## Step 3 — check
+## Step 2 — check
 
 **When**
 
@@ -128,10 +114,4 @@ ok
 
 ## Final filesystem state
 
-```text
-.
-├── .changes/
-│   ├── 0000-init.yaml
-│   └── 0001-add-widget-api.yaml
-└── CHANGELOG.md
-```
+Unchanged from Given.

@@ -78,7 +78,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-06-19
 
 ### Added
 
@@ -103,7 +103,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
-- Computed next release version is `2.0.0` (`major` wins over `minor`).
+- Release version written to changelog is `2.0.0` (`major` wins over `minor`).
+- `.changes/0001-add-export.yaml` and `.changes/0002-remove-legacy-api.yaml` are moved to `.changes/released/`.
 
 ---
 
@@ -113,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 .
 ├── .changes/
 │   ├── 0000-init.yaml
-│   ├── 0001-add-export.yaml
-│   └── 0002-remove-legacy-api.yaml
+│   └── released/
+│       ├── 0001-add-export.yaml
+│       └── 0002-remove-legacy-api.yaml
 └── CHANGELOG.md
 ```

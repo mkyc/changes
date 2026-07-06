@@ -6,13 +6,13 @@ New entries append at the bottom. When a decision changes, add a new entry rathe
 
 | ID | Date | Summary |
 |----|------|---------|
-| [D001](#d001-consumed-changesets) | 2026-07-06 | Move released changesets to `.changes/released/` |
+| [D001](#d001-consumed-changesets) | 2026-07-06 | `apply` moves consumed changesets to `.changes/released/` |
 | [D002](#d002-concurrent-pr-sequence-collisions) | 2026-07-06 | Duplicate sequence IDs are a merge-time concern; `check` rejects them |
 | [D003](#d003-changelog-format) | 2026-07-06 | Keep a Changelog 1.1.0 only |
-| [D004](#d004-version-computation) | 2026-07-06 | Version is computed from `init` + increments |
+| [D004](#d004-version-computation) | 2026-07-06 | Version is computed from published baseline + pending increments |
 | [D005](#d005-default-since-ref) | 2026-07-06 | Default `--since` is `main` |
 | [D006](#d006-init-without-prior-tag) | 2026-07-06 | Baseline version `0.0.0` when no release tag exists |
-| [D007](#d007-apply-side-effects) | 2026-07-06 | `apply` writes only `CHANGELOG.md` |
+| [D007](#d007-apply-behavior) | 2026-07-06 | `apply` writes `CHANGELOG.md` and moves pending files to `released/` |
 | [D008](#d008-propose-granularity) | 2026-07-06 | One change file per propose run |
 | [D009](#d009-check-success-output) | 2026-07-06 | `check` prints `ok` on success |
 | [D010](#d010-cli-overrides-config) | 2026-07-06 | CLI flags override `.changes/config.yaml` |
@@ -26,7 +26,7 @@ New entries append at the bottom. When a decision changes, add a new entry rathe
 **Date:** 2026-07-06  
 **Status:** accepted
 
-After a release, consumed change files are moved to `.changes/released/` (not deleted, not left in `.changes/` root).
+When `changes apply` runs, each pending `event: change` file under `.changes/` is moved to `.changes/released/` (same filename, same content). Files are not deleted. `0000-init.yaml` and `config.yaml` stay in `.changes/` root.
 
 ---
 
@@ -55,7 +55,15 @@ Use [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 1.1.0 only. No conf
 **Date:** 2026-07-06  
 **Status:** accepted
 
-Release version is always computed from the `init` baseline plus aggregated `increment` values across pending change files. No config or CLI override for now.
+When `changes apply` runs with pending change files, the release version is computed from the **current published version** plus aggregated `increment` values across those pending files. No config or CLI override for now.
+
+**Current published version** is:
+- the `summary` from `0000-init.yaml` when `.changes/released/` is empty, or
+- the semver of the latest version section already in `CHANGELOG.md` from a prior apply.
+
+`apply` writes pending entries under `## [X.Y.Z] - <date>` using the computed version. There is no `[Unreleased]` section.
+
+If all pending increments are `none`, the version number does not bump; new entries are appended under the current version section in `CHANGELOG.md`.
 
 ---
 
@@ -77,12 +85,20 @@ When `changes init` runs in a repo with no release tags, `0000-init.yaml` uses `
 
 ---
 
-## D007: Apply side effects
+## D007: Apply behavior
 
 **Date:** 2026-07-06  
 **Status:** accepted
 
-`changes apply` writes only `CHANGELOG.md`. It does not bump `package.json`, tags, or any other files.
+`changes apply`:
+
+1. Regenerates `CHANGELOG.md` from `0000-init.yaml`, `.changes/released/`, and any pending files under `.changes/`.
+2. Writes computed version heading(s) per [D004](#d004-version-computation).
+3. Moves every pending `event: change` file from `.changes/` to `.changes/released/`.
+
+Does not create git tags or modify files outside `.changes/` and `CHANGELOG.md`.
+
+When there are no pending change files, `apply` only regenerates `CHANGELOG.md` from existing state (idempotent if nothing changed).
 
 ---
 
@@ -129,4 +145,4 @@ On failure, commands exit `1`, write a single line to stderr in the form `error:
 **Date:** 2026-07-06  
 **Status:** accepted
 
-Pending change file sequence prefixes under `.changes/` (excluding `0000-init`) must form a contiguous sequence starting at `0001` with no gaps. `changes check` fails with `error: missing sequence NNNN` when a gap exists.
+Sequence prefixes must be unique across `.changes/` and `.changes/released/` combined. Pending files under `.changes/` (excluding init) must form a contiguous tail continuing from the highest sequence in `.changes/released/` (or start at `0001` when `released/` is empty). `changes check` fails with `error: missing sequence NNNN` when a gap exists.

@@ -2,7 +2,7 @@
 
 Committed `CHANGELOG.md` that differs from `apply` output fails validation.
 
-**Scope:** data consistency, error handling, recovery prerequisite.
+**Scope:** data consistency, error handling, recovery.
 
 ---
 
@@ -41,7 +41,7 @@ source:
     message: "feat(widget): add API endpoint"
 ```
 
-`CHANGELOG.md` (manually edited — missing the pending change):
+`CHANGELOG.md` (stale — missing the pending change):
 
 ```markdown
 # Changelog
@@ -56,6 +56,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Start tracking changes with `changes`.
   Last release before adopting the tool was 1.2.3.
 ```
+
+### Environment
+
+- `changes apply` runs at `2026-06-19T10:00:00Z`.
 
 ---
 
@@ -101,7 +105,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-06-19
 
 ### Added
 
@@ -120,6 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
+- `.changes/0001-add-widget-api.yaml` is moved to `.changes/released/0001-add-widget-api.yaml`.
 
 ---
 
@@ -150,7 +155,8 @@ ok
 .
 ├── .changes/
 │   ├── 0000-init.yaml
-│   └── 0001-add-widget-api.yaml
+│   └── released/
+│       └── 0001-add-widget-api.yaml
 └── CHANGELOG.md
 ```
 

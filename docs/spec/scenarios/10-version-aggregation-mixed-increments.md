@@ -99,7 +99,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-06-19
 
 ### Added
 
@@ -130,7 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
-- Computed next release version is `1.3.0` (`minor` wins over `patch` and `none`).
+- Release version written to changelog is `1.3.0` (`minor` wins over `patch` and `none`).
+- `.changes/0001-fix-typo.yaml`, `.changes/0002-update-ci.yaml`, and `.changes/0003-add-export.yaml` are moved to `.changes/released/` with identical content.
 
 ---
 
@@ -161,8 +162,9 @@ ok
 .
 ├── .changes/
 │   ├── 0000-init.yaml
-│   ├── 0001-fix-typo.yaml
-│   ├── 0002-update-ci.yaml
-│   └── 0003-add-export.yaml
+│   └── released/
+│       ├── 0001-fix-typo.yaml
+│       ├── 0002-update-ci.yaml
+│       └── 0003-add-export.yaml
 └── CHANGELOG.md
 ```

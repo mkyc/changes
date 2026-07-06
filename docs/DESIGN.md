@@ -77,7 +77,7 @@ Monorepo: aggregate **per package** independently.
 | Command | Purpose |
 |---------|---------|
 | `changes propose [--since <ref>]` | Inspect commits since ref; emit draft `.changes/NNNN-*.yaml` |
-| `changes apply [--package <path>]` | Regenerate `CHANGELOG.md` from `.changes/` |
+| `changes apply [--package <path>]` | Regenerate `CHANGELOG.md`, compute version, move pending changesets to `.changes/released/` |
 | `changes check` | Validate schema, IDs, ordering; verify `apply` is clean (no drift) |
 
 `propose` maps conventional commit prefixes to suggested `increment` (configurable):
@@ -105,7 +105,7 @@ User always edits the draft before committing.
 ```
 
 1. `changes propose` → review/edit `.changes/000N-*.yaml`
-2. `changes apply` → commit changesets + changelog together
+2. `changes apply` → commit changesets (now under `.changes/released/`) + `CHANGELOG.md` together
 3. CI: `changes check` validates schema and drift
 
 Monorepo: same flow with `--package`, one `CHANGELOG.md` per package.
