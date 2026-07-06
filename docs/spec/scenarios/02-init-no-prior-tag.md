@@ -14,6 +14,8 @@ First-time adoption in a repository that has never been tagged, then propose and
 | [D007](../DECISIONS.md#d007-apply-behavior) | Step 3: writes `CHANGELOG.md` with `## [0.1.0]` and moves changeset |
 | [D008](../DECISIONS.md#d008-propose-granularity) | Step 2: one file for one commit since `main` |
 
+Each step documents **one** `changes` command. Git commits and branch checkouts are ordinary repo setup; they are not part of what the tool validates.
+
 ---
 
 ## Given
@@ -36,34 +38,33 @@ First-time adoption in a repository that has never been tagged, then propose and
   | `0000001` | `2026-01-10` | `chore: initial commit` |
   | `0000002` | `2026-03-05` | `docs: add README` |
 
-- Working tree is clean; current branch is `feat/logging`.
 - No `.changes/` directory exists yet.
 
 ### Environment
 
-- `changes init` runs at `2026-06-18T10:00:00Z` on `main` (before checkout of `feat/logging`, or equivalently: init file is committed on `main` and branch is checked out before step 2).
+- `changes init` runs at `2026-06-18T10:00:00Z`.
 - `changes propose` runs at `2026-06-19T10:00:00Z`.
 - `changes apply` runs at `2026-06-19T10:01:00Z`.
-
-### Initial filesystem
-
-```text
-.
-├── .git/
-└── (no .changes/, no CHANGELOG.md)
-```
 
 ---
 
 ## Step 1 — init
 
-**When** the user is on `main` and runs:
+### Precondition
+
+- Current branch: `main`.
+- Working tree clean.
+- No `.changes/` directory.
+
+### When
 
 ```text
 changes init
 ```
 
-**Then** file `.changes/0000-init.yaml` is created with exactly:
+### Then
+
+File `.changes/0000-init.yaml` is created with exactly:
 
 ```yaml
 id: "0000-init"
@@ -77,26 +78,33 @@ details: |
   Last release before adopting the tool was 0.0.0.
 ```
 
-**And**
+### And
 
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
 - No other files are created or modified.
 
-**When** the user commits `.changes/0000-init.yaml` on `main`, then checks out `feat/logging`. [TODO what is it?]
-
 ---
 
 ## Step 2 — propose
 
-**When**
+### Precondition
+
+- Current branch: `feat/logging`.
+- `.changes/0000-init.yaml` exists with the content from step 1.
+- Working tree clean except for what step 1 created (or init output is already on this branch).
+- No `.changes/0001-*.yaml` yet.
+
+### When
 
 ```text
 changes propose
 ```
 
-**Then** file `.changes/0001-add-structured-logging.yaml` is created with exactly:
+### Then
+
+File `.changes/0001-add-structured-logging.yaml` is created with exactly:
 
 ```yaml
 id: "0001-add-structured-logging"
@@ -113,28 +121,33 @@ source:
     message: "feat(log): add structured logging"
 ```
 
-**And**
+### And
 
 - Exit code is `0`.
 - Stdout is empty.
 - Stderr is empty.
 - `.changes/0000-init.yaml` is unchanged.
-- Commits `0000001` and `0000002` on `main` are not in `source` (not reachable since `main` as new work).
+- Commits `0000001` and `0000002` on `main` are not in `source`.
 - `CHANGELOG.md` does not exist.
-
-**When** the user commits `.changes/0001-add-structured-logging.yaml` unchanged. [TODO what is it?]
 
 ---
 
 ## Step 3 — apply
 
-**When**
+### Precondition
+
+- `.changes/0000-init.yaml` and `.changes/0001-add-structured-logging.yaml` exist with the content from steps 1 and 2.
+- No `CHANGELOG.md` yet.
+
+### When
 
 ```text
 changes apply
 ```
 
-**Then** file `CHANGELOG.md` is created with exactly:
+### Then
+
+File `CHANGELOG.md` is created with exactly:
 
 ```markdown
 # Changelog
@@ -158,7 +171,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Last release before adopting the tool was 0.0.0.
 ```
 
-**And**
+### And
 
 - Exit code is `0`.
 - Stdout is empty.
@@ -170,13 +183,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Step 4 — check
 
-**When**
+### Precondition
+
+- Filesystem matches the end of step 3.
+
+### When
 
 ```text
 changes check
 ```
 
-**Then**
+### Then
 
 - Exit code is `0`.
 - Stdout is exactly:

@@ -15,6 +15,8 @@ This is not an architecture or API design document.
 
 Scenario files are numbered and named by theme (`01-single-repo-happy-path.md`, …). Add new files as coverage grows; do not cram every category into one file.
 
+Each step documents **one** `changes` command. Use a **Precondition** subsection for repo state required before that command. Git commits and branch checkouts are ordinary setup outside tool validation unless a scenario explicitly tests them.
+
 ## Core concepts
 
 | Concept | Role |
