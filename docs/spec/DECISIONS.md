@@ -15,6 +15,9 @@ New entries append at the bottom. When a decision changes, add a new entry rathe
 | [D007](#d007-apply-side-effects) | 2026-07-06 | `apply` writes only `CHANGELOG.md` |
 | [D008](#d008-propose-granularity) | 2026-07-06 | One change file per propose run |
 | [D009](#d009-check-success-output) | 2026-07-06 | `check` prints `ok` on success |
+| [D010](#d010-cli-overrides-config) | 2026-07-06 | CLI flags override `.changes/config.yaml` |
+| [D011](#d011-error-output-format) | 2026-07-06 | Errors on stderr as `error: …`, exit code `1` |
+| [D012](#d012-sequence-gap-validation) | 2026-07-06 | `check` fails on missing sequence numbers |
 
 ---
 
@@ -98,3 +101,32 @@ When `changes init` runs in a repo with no release tags, `0000-init.yaml` uses `
 **Status:** accepted
 
 On success, `changes check` exits `0`, writes exactly `ok` to stdout (plus trailing newline), and leaves stderr empty.
+
+---
+
+## D010: CLI overrides config
+
+**Date:** 2026-07-06  
+**Status:** accepted
+
+When the same setting is provided on the CLI and in `.changes/config.yaml`, the CLI value wins. Config values win over built-in defaults.
+
+Precedence: **CLI flags > `.changes/config.yaml` > built-in defaults**.
+
+---
+
+## D011: Error output format
+
+**Date:** 2026-07-06  
+**Status:** accepted
+
+On failure, commands exit `1`, write a single line to stderr in the form `error: <message>`, and leave stdout empty unless a scenario specifies otherwise.
+
+---
+
+## D012: Sequence gap validation
+
+**Date:** 2026-07-06  
+**Status:** accepted
+
+Pending change file sequence prefixes under `.changes/` (excluding `0000-init`) must form a contiguous sequence starting at `0001` with no gaps. `changes check` fails with `error: missing sequence NNNN` when a gap exists.

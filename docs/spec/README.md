@@ -67,13 +67,52 @@ These must hold regardless of user actions or execution order:
 6. **Propose is non-destructive** — propose creates or updates draft change files only; it does not modify `CHANGELOG.md` or rewrite existing committed change files without explicit user action.
 7. **Check detects drift** — if committed `CHANGELOG.md` differs from what `apply` would produce, `check` fails.
 8. **Unique sequence IDs** — at most one change file per numeric sequence prefix (`0000`, `0001`, …) under `.changes/` and `.changes/released/` combined; duplicates fail `check`.
-9. **Single-repo default package** — when no monorepo config exists, all changes use `package: "."`.
+9. **Contiguous sequences** — pending change prefixes under `.changes/` (excluding init) start at `0001` with no gaps; gaps fail `check`.
+10. **Single-repo default package** — when no monorepo config exists, all changes use `package: "."`.
 
 ## Scenario index
 
-| # | File | Category | Status |
-|---|------|----------|--------|
-| 01 | [single-repo-happy-path](scenarios/01-single-repo-happy-path.md) | Happy path | draft |
+| # | File | Category |
+|---|------|----------|
+| 01 | [single-repo-happy-path](scenarios/01-single-repo-happy-path.md) | Happy path |
+| 02 | [init-no-prior-tag](scenarios/02-init-no-prior-tag.md) | Boundary / init |
+| 03 | [propose-breaking-major](scenarios/03-propose-breaking-major.md) | Propose / conventional commits |
+| 04 | [propose-patch-only](scenarios/04-propose-patch-only.md) | Propose / conventional commits |
+| 05 | [propose-none-increment](scenarios/05-propose-none-increment.md) | Propose / no-release |
+| 06 | [propose-no-new-commits](scenarios/06-propose-no-new-commits.md) | Propose / boundary |
+| 07 | [propose-skips-consumed-commits](scenarios/07-propose-skips-consumed-commits.md) | Propose / idempotency |
+| 08 | [config-default-since](scenarios/08-config-default-since.md) | Configuration |
+| 09 | [cli-since-overrides-config](scenarios/09-cli-since-overrides-config.md) | Configuration precedence |
+| 10 | [version-aggregation-mixed-increments](scenarios/10-version-aggregation-mixed-increments.md) | Version aggregation |
+| 11 | [apply-init-only](scenarios/11-apply-init-only.md) | Apply / boundary |
+| 12 | [apply-idempotent](scenarios/12-apply-idempotent.md) | Apply / idempotency |
+| 13 | [check-duplicate-sequence](scenarios/13-check-duplicate-sequence.md) | Check / conflict |
+| 14 | [check-changelog-drift](scenarios/14-check-changelog-drift.md) | Check / drift + recovery |
+| 15 | [check-invalid-schema](scenarios/15-check-invalid-schema.md) | Check / invalid input |
+| 16 | [check-sequence-gap](scenarios/16-check-sequence-gap.md) | Check / ordering |
+| 17 | [release-move-to-released](scenarios/17-release-move-to-released.md) | Release / state transition |
+| 18 | [not-a-git-repository](scenarios/18-not-a-git-repository.md) | Missing dependency |
+| 19 | [init-already-exists](scenarios/19-init-already-exists.md) | Init / error |
+| 20 | [major-wins-aggregation](scenarios/20-major-wins-aggregation.md) | Version aggregation |
+
+### Coverage map
+
+| Original category | Scenarios |
+|-------------------|-----------|
+| Happy path | 01 |
+| Invalid input | 15, 19 |
+| Missing / unavailable dependencies | 18 |
+| Boundary conditions | 02, 06, 11, 20 |
+| Error handling | 13, 15, 16, 18, 19 |
+| Recovery behavior | 14 |
+| Repeated execution / idempotency | 07, 12 |
+| Configuration resolution and precedence | 08, 09 |
+| State transitions | 17 |
+| Concurrent or conflicting operations | 13 |
+| Data consistency | 10, 14, 20 |
+| Security / permissions | — (deferred) |
+| Upgrade / migration / compatibility | — (deferred) |
+| Monorepo | — (deferred) |
 
 ## Decisions
 
