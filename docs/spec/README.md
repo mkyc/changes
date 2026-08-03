@@ -143,9 +143,9 @@ Product and behavior decisions live in [DECISIONS.md](DECISIONS.md). Scenario-sp
    - Backfill one or many change files from the full history?
    - Require an explicit `--since` (or other flag) before proposing against old history?
    - Refuse / warn when commit count exceeds a threshold?
-
 2. **Cleanup of released change files** — may users delete archives under `.changes/released/` after some time? If so, how does `apply`/`check` reconstruct history?
-
-3. **Why 0000-init.yaml** stays in root?
+3. Why 0000-init.yaml stays in root?
+4. in scenario 05, I'm not sure if I like that we release 1.2.3 even if that was already in repo state. I think this also touches what should we do with "none" increments on apply. That is also with scenario 11. 
+5. Do we need `id` field in change files?
 
 Add new items here when scenarios surface unresolved behavior; move to [DECISIONS.md](DECISIONS.md) once decided.
