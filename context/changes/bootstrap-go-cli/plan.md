@@ -471,5 +471,5 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [x] 5.1 Full suite passes: `go test ./...`
-- [x] 5.2 `go vet ./...` passes
+- [x] 5.1 Full suite passes: `go test ./...` — 0903b18
+- [x] 5.2 `go vet ./...` passes — 0903b18
