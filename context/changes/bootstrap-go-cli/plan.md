@@ -456,20 +456,20 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [x] 4.1 Module builds: `go build ./...`
-- [x] 4.2 `go vet ./...` passes
-- [x] 4.3 Command tree unit tests pass: `go test ./internal/cli/...`
+- [x] 4.1 Module builds: `go build ./...` — 4869f9f
+- [x] 4.2 `go vet ./...` passes — 4869f9f
+- [x] 4.3 Command tree unit tests pass: `go test ./internal/cli/...` — 4869f9f
 
 #### Manual
 
-- [x] 4.4 `./changes --help` lists `init`, `propose`, `apply`, `check`
-- [x] 4.5 `./changes propose --help` shows `--since <ref>`
-- [x] 4.6 Each subcommand exits 0 with no output in an empty temp directory
-- [x] 4.7 `go run . nonexistent-command` exits 1 with `error: ...` on stderr and empty stdout
+- [x] 4.4 `./changes --help` lists `init`, `propose`, `apply`, `check` — 4869f9f
+- [x] 4.5 `./changes propose --help` shows `--since <ref>` — 4869f9f
+- [x] 4.6 Each subcommand exits 0 with no output in an empty temp directory — 4869f9f
+- [x] 4.7 `go run . nonexistent-command` exits 1 with `error: ...` on stderr and empty stdout — 4869f9f
 
 ### Phase 5: Smoke Tests
 
 #### Automated
 
-- [ ] 5.1 Full suite passes: `go test ./...`
-- [ ] 5.2 `go vet ./...` passes
+- [x] 5.1 Full suite passes: `go test ./...`
+- [x] 5.2 `go vet ./...` passes

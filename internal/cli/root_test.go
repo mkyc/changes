@@ -37,3 +37,23 @@ func TestNewRootCmd_ProposeHasSinceFlag(t *testing.T) {
 		t.Error("expected propose command to declare a --since flag")
 	}
 }
+
+func TestSubcommands_SilentSuccessWithNoConfigFile(t *testing.T) {
+	for _, name := range []string{"init", "propose", "apply", "check"} {
+		t.Run(name, func(t *testing.T) {
+			deps, stdout, stderr := app.NewFakeDeps(time.Now())
+			root := cli.NewRootCmd(deps)
+			root.SetArgs([]string{name})
+
+			if err := root.Execute(); err != nil {
+				t.Fatalf("Execute(%s): unexpected error: %v", name, err)
+			}
+			if stdout.Len() != 0 {
+				t.Errorf("Execute(%s): expected empty stdout, got %q", name, stdout.String())
+			}
+			if stderr.Len() != 0 {
+				t.Errorf("Execute(%s): expected empty stderr, got %q", name, stderr.String())
+			}
+		})
+	}
+}
