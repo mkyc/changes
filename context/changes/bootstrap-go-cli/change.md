@@ -1,9 +1,9 @@
 ---
 change_id: bootstrap-go-cli
 title: Bootstrap Go CLI with cobra per task 0001
-status: new
+status: planned
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-05
 archived_at: null
 ---
 
