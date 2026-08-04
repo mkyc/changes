@@ -431,12 +431,12 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [x] 1.1 Module builds: `go build ./...`
-- [x] 1.2 Module is tidy: `go mod tidy` produces no diff
+- [x] 1.1 Module builds: `go build ./...` — a4e3385c
+- [x] 1.2 Module is tidy: `go mod tidy` produces no diff — a4e3385c
 
 #### Manual
 
-- [x] 1.3 `go run . --help` runs without error
+- [x] 1.3 `go run . --help` runs without error — a4e3385c
 
 ### Phase 2: Deps/App Scaffolding
 
