@@ -449,23 +449,23 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [x] 3.1 Package builds: `go build ./internal/config/...`
-- [x] 3.2 Unit tests pass (defaults, partial config, CLI override): `go test ./internal/config/...`
+- [x] 3.1 Package builds: `go build ./internal/config/...` — 9ff9ab3
+- [x] 3.2 Unit tests pass (defaults, partial config, CLI override): `go test ./internal/config/...` — 9ff9ab3
 
 ### Phase 4: Cobra Command Wiring
 
 #### Automated
 
-- [ ] 4.1 Module builds: `go build ./...`
-- [ ] 4.2 `go vet ./...` passes
-- [ ] 4.3 Command tree unit tests pass: `go test ./internal/cli/...`
+- [x] 4.1 Module builds: `go build ./...`
+- [x] 4.2 `go vet ./...` passes
+- [x] 4.3 Command tree unit tests pass: `go test ./internal/cli/...`
 
 #### Manual
 
-- [ ] 4.4 `./changes --help` lists `init`, `propose`, `apply`, `check`
-- [ ] 4.5 `./changes propose --help` shows `--since <ref>`
-- [ ] 4.6 Each subcommand exits 0 with no output in an empty temp directory
-- [ ] 4.7 `go run . nonexistent-command` exits 1 with `error: ...` on stderr and empty stdout
+- [x] 4.4 `./changes --help` lists `init`, `propose`, `apply`, `check`
+- [x] 4.5 `./changes propose --help` shows `--since <ref>`
+- [x] 4.6 Each subcommand exits 0 with no output in an empty temp directory
+- [x] 4.7 `go run . nonexistent-command` exits 1 with `error: ...` on stderr and empty stdout
 
 ### Phase 5: Smoke Tests
 

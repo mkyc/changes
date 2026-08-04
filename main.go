@@ -1,11 +1,19 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+	"os"
+
+	"github.com/mkyc/changes/internal/app"
+	"github.com/mkyc/changes/internal/cli"
+)
 
 func main() {
-	rootCmd := &cobra.Command{
-		Use:   "changes",
-		Short: "changes manages changesets and generates CHANGELOG.md",
+	deps := app.NewRealDeps()
+	root := cli.NewRootCmd(deps)
+
+	if err := root.Execute(); err != nil {
+		fmt.Fprintf(deps.Stderr, "error: %s\n", err)
+		os.Exit(1)
 	}
-	_ = rootCmd.Execute()
 }
