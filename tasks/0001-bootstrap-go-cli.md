@@ -1,7 +1,7 @@
 ---
 title: "Bootstrap the Go CLI and default configuration"
 id: "0001"
-status: pending
+status: in-progress
 priority: high
 effort: medium
 type: feature
