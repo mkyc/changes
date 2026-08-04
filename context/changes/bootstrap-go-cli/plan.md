@@ -442,8 +442,8 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [ ] 2.1 Package builds: `go build ./internal/app/...`
-- [ ] 2.2 Unit test confirms `NewFakeDeps` produces isolated buffers: `go test ./internal/app/...`
+- [x] 2.1 Package builds: `go build ./internal/app/...` — 53337e0
+- [x] 2.2 Unit test confirms `NewFakeDeps` produces isolated buffers: `go test ./internal/app/...` — 53337e0
 
 ### Phase 3: Config Resolution
 
