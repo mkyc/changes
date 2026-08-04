@@ -449,8 +449,8 @@ Not applicable — greenfield module, no existing users or data to migrate.
 
 #### Automated
 
-- [ ] 3.1 Package builds: `go build ./internal/config/...`
-- [ ] 3.2 Unit tests pass (defaults, partial config, CLI override): `go test ./internal/config/...`
+- [x] 3.1 Package builds: `go build ./internal/config/...`
+- [x] 3.2 Unit tests pass (defaults, partial config, CLI override): `go test ./internal/config/...`
 
 ### Phase 4: Cobra Command Wiring
 
