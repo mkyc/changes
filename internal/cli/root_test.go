@@ -58,6 +58,22 @@ func TestSubcommands_SilentSuccessWithNoConfigFile(t *testing.T) {
 	}
 }
 
+func TestPropose_SilentSuccessWithSinceFlag(t *testing.T) {
+	deps, stdout, stderr := app.NewFakeDeps(time.Now())
+	root := cli.NewRootCmd(deps)
+	root.SetArgs([]string{"propose", "--since", "HEAD~1"})
+
+	if err := root.Execute(); err != nil {
+		t.Fatalf("Execute(propose --since HEAD~1): unexpected error: %v", err)
+	}
+	if stdout.Len() != 0 {
+		t.Errorf("expected empty stdout, got %q", stdout.String())
+	}
+	if stderr.Len() != 0 {
+		t.Errorf("expected empty stderr, got %q", stderr.String())
+	}
+}
+
 func TestSubcommands_RejectExtraPositionalArgs(t *testing.T) {
 	for _, name := range []string{"init", "propose", "apply", "check"} {
 		t.Run(name, func(t *testing.T) {
