@@ -174,3 +174,53 @@ func TestLoad_CLIFlagWinsOverConfigFile(t *testing.T) {
 		t.Errorf("Since = %q, want CLI value %q", cfg.Since, "release-branch")
 	}
 }
+
+func TestLoad_EmptyCLIFlagFallsBackToDefault(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	flags := newFlagSet()
+	if err := flags.Set("since", ""); err != nil {
+		t.Fatalf("Set: %v", err)
+	}
+
+	cfg, err := config.Load(fsys, flags)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if cfg.Since != "main" {
+		t.Errorf("Since = %q, want default %q", cfg.Since, "main")
+	}
+}
+
+func TestLoad_EmptyCLIFlagFallsBackToConfigFile(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "since: develop\n")
+
+	flags := newFlagSet()
+	if err := flags.Set("since", ""); err != nil {
+		t.Fatalf("Set: %v", err)
+	}
+
+	cfg, err := config.Load(fsys, flags)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if cfg.Since != "develop" {
+		t.Errorf("Since = %q, want config value %q", cfg.Since, "develop")
+	}
+}
+
+func TestLoad_EmptyConfigValueFallsBackToDefault(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "since: \"\"\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if cfg.Since != "main" {
+		t.Errorf("Since = %q, want default %q", cfg.Since, "main")
+	}
+}

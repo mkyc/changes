@@ -135,10 +135,10 @@ Quoted YAML `since: ""` will now resolve to `main` instead of remaining empty. T
 
 #### Automated
 
-- [ ] 1.1 Config package tests pass: `go test ./internal/config/...`
-- [ ] 1.2 Full test suite passes: `task test`
-- [ ] 1.3 Formatting, vet, module tidiness, and lint checks pass: `task doctor`
+- [x] 1.1 Config package tests pass: `go test ./internal/config/...`
+- [x] 1.2 Full test suite passes: `task test`
+- [x] 1.3 Formatting, vet, module tidiness, and lint checks pass: `task doctor`
 
 #### Manual
 
-- [ ] 1.4 None beyond automated verification; review the automated test results
+- [x] 1.4 None beyond automated verification; review the automated test results

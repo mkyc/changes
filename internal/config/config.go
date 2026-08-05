@@ -15,9 +15,12 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-// ConfigFilePath is the location of the optional project config file,
-// relative to the working directory.
-const ConfigFilePath = ".changes/config.yaml"
+const (
+	// ConfigFilePath is the location of the optional project config file,
+	// relative to the working directory.
+	ConfigFilePath = ".changes/config.yaml"
+	defaultSince   = "main"
+)
 
 var allowedConventionalKeys = map[string]struct{}{
 	"major": {},
@@ -102,7 +105,7 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 
 	v.SetDefault("package", ".")
 	v.SetDefault("changelog", "CHANGELOG.md")
-	v.SetDefault("since", "main")
+	v.SetDefault("since", defaultSince)
 	v.SetDefault("tag_prefix", "v")
 	v.SetDefault("conventional", defaultConventional())
 
@@ -118,9 +121,13 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 	}
 
 	if flags != nil {
-		if since, err := flags.GetString("since"); err == nil && flags.Changed("since") {
+		if since, err := flags.GetString("since"); err == nil && flags.Changed("since") && since != "" {
 			v.Set("since", since)
 		}
+	}
+	since := v.GetString("since")
+	if since == "" {
+		since = defaultSince
 	}
 
 	conventional, err := mergeConventional(data, configFileRead)
@@ -131,7 +138,7 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 	return &Config{
 		Package:      v.GetString("package"),
 		Changelog:    v.GetString("changelog"),
-		Since:        v.GetString("since"),
+		Since:        since,
 		TagPrefix:    v.GetString("tag_prefix"),
 		Conventional: conventional,
 	}, nil
