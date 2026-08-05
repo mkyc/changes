@@ -1,7 +1,7 @@
 ---
 title: "Fix partial conventional config not merging with defaults"
 id: "0011"
-status: pending
+status: in-progress
 priority: high
 type: bug
 tags: ["config", "bootstrap-go-cli"]

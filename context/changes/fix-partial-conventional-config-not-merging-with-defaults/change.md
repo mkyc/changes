@@ -1,7 +1,7 @@
 ---
 change_id: fix-partial-conventional-config-not-merging-with-defaults
 title: Fix partial conventional config not merging with defaults
-status: new
+status: planned
 created: 2026-08-05
 updated: 2026-08-05
 archived_at: null
