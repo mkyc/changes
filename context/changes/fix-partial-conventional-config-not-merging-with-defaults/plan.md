@@ -217,21 +217,21 @@ now error instead of silently producing unexpected mappings.
 
 #### Automated
 
-- [x] 1.1 Package builds: `go build ./internal/config/...`
-- [x] 1.2 Unit tests pass: `go test ./internal/config/...`
+- [x] 1.1 Package builds: `go build ./internal/config/...` — 3138cec
+- [x] 1.2 Unit tests pass: `go test ./internal/config/...` — 3138cec
 
 #### Manual
 
-- [x] 1.3 None beyond automated
+- [x] 1.3 None beyond automated — 4350c8f4
 
 ### Phase 2: Tests
 
 #### Automated
 
-- [x] 2.1 Unit tests pass: `go test ./internal/config/...`
-- [x] 2.2 New test `TestLoad_PartialConventionalFallsBackToDefaults` exists and passes
-- [x] 2.3 Existing tests `TestLoad_Defaults`, `TestLoad_PartialConfigFallsBackToDefaults`, and `TestLoad_CLIFlagWinsOverConfigFile` remain green
+- [x] 2.1 Unit tests pass: `go test ./internal/config/...` — 4350c8f4
+- [x] 2.2 New test `TestLoad_PartialConventionalFallsBackToDefaults` exists and passes — 4350c8f4
+- [x] 2.3 Existing tests `TestLoad_Defaults`, `TestLoad_PartialConfigFallsBackToDefaults`, and `TestLoad_CLIFlagWinsOverConfigFile` remain green — 4350c8f4
 
 #### Manual
 
-- [x] 2.4 None beyond automated
+- [x] 2.4 None beyond automated — 4350c8f4
