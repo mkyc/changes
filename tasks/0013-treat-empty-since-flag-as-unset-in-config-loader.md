@@ -1,7 +1,7 @@
 ---
 title: "Treat empty --since flag as unset in config loader"
 id: "0013"
-status: pending
+status: in-progress
 priority: medium
 type: bug
 tags: ["config", "bootstrap-go-cli"]
