@@ -1,7 +1,7 @@
 ---
 id: "0010"
 title: "create taskfile"
-status: in-progress
+status: completed
 priority: medium
 dependencies: []
 tags: []
