@@ -11,6 +11,7 @@ func newInitCmd(deps *app.Deps) *cobra.Command {
 	return &cobra.Command{
 		Use:   "init",
 		Short: "Initialize .changes/ configuration",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			_, err := config.Load(deps.FS, cmd.Flags())
 			return err

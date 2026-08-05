@@ -57,3 +57,21 @@ func TestSubcommands_SilentSuccessWithNoConfigFile(t *testing.T) {
 		})
 	}
 }
+
+func TestSubcommands_RejectExtraPositionalArgs(t *testing.T) {
+	for _, name := range []string{"init", "propose", "apply", "check"} {
+		t.Run(name, func(t *testing.T) {
+			deps, _, _ := app.NewFakeDeps(time.Now())
+			root := cli.NewRootCmd(deps)
+			root.SetArgs([]string{name, "extra-arg"})
+
+			err := root.Execute()
+			if err == nil {
+				t.Fatalf("Execute(%s, extra-arg): expected error, got nil", name)
+			}
+			if err.Error() == "" {
+				t.Errorf("Execute(%s, extra-arg): expected non-empty error message", name)
+			}
+		})
+	}
+}

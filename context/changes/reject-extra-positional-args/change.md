@@ -1,7 +1,7 @@
 ---
 change_id: reject-extra-positional-args
 title: Reject extra positional args on stub subcommands
-status: planned
+status: implementing
 created: 2026-08-06
 updated: 2026-08-06
 archived_at: null

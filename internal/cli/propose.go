@@ -11,6 +11,7 @@ func newProposeCmd(deps *app.Deps) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "propose",
 		Short: "Propose a new changeset from recent commits",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			_, err := config.Load(deps.FS, cmd.Flags())
 			return err
