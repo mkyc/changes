@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -13,6 +14,43 @@ func newFlagSet() *pflag.FlagSet {
 	fs := pflag.NewFlagSet("test", pflag.ContinueOnError)
 	fs.String("since", "", "")
 	return fs
+}
+
+func defaultConventional() map[string][]string {
+	return map[string][]string{
+		"major": {"feat!", "BREAKING CHANGE"},
+		"minor": {"feat"},
+		"patch": {"fix", "perf", "docs", "style", "refactor", "test", "build", "chore"},
+		"none":  {"ci"},
+	}
+}
+
+func assertConventional(t *testing.T, got map[string][]string, want map[string][]string) {
+	t.Helper()
+	for key, vals := range want {
+		gotVals, ok := got[key]
+		if !ok {
+			t.Fatalf("Conventional[%q] missing", key)
+		}
+		if len(gotVals) != len(vals) {
+			t.Fatalf("Conventional[%q] = %v, want %v", key, gotVals, vals)
+		}
+		for i := range vals {
+			if gotVals[i] != vals[i] {
+				t.Fatalf("Conventional[%q] = %v, want %v", key, gotVals, vals)
+			}
+		}
+	}
+}
+
+func writeConfigFile(t *testing.T, fsys afero.Fs, yaml string) {
+	t.Helper()
+	if err := fsys.MkdirAll(".changes", 0o755); err != nil {
+		t.Fatalf("MkdirAll: %v", err)
+	}
+	if err := afero.WriteFile(fsys, config.ConfigFilePath, []byte(yaml), 0o644); err != nil {
+		t.Fatalf("WriteFile: %v", err)
+	}
 }
 
 func TestLoad_Defaults(t *testing.T) {
@@ -36,37 +74,13 @@ func TestLoad_Defaults(t *testing.T) {
 		t.Errorf("TagPrefix = %q, want %q", cfg.TagPrefix, "v")
 	}
 
-	want := map[string][]string{
-		"major": {"feat!", "BREAKING CHANGE"},
-		"minor": {"feat"},
-		"patch": {"fix", "perf", "docs", "style", "refactor", "test", "build", "chore"},
-		"none":  {"ci"},
-	}
-	for key, vals := range want {
-		got, ok := cfg.Conventional[key]
-		if !ok {
-			t.Fatalf("Conventional[%q] missing", key)
-		}
-		if len(got) != len(vals) {
-			t.Fatalf("Conventional[%q] = %v, want %v", key, got, vals)
-		}
-		for i := range vals {
-			if got[i] != vals[i] {
-				t.Fatalf("Conventional[%q] = %v, want %v", key, got, vals)
-			}
-		}
-	}
+	want := defaultConventional()
+	assertConventional(t, cfg.Conventional, want)
 }
 
 func TestLoad_PartialConfigFallsBackToDefaults(t *testing.T) {
 	fsys := afero.NewMemMapFs()
-	if err := fsys.MkdirAll(".changes", 0o755); err != nil {
-		t.Fatalf("MkdirAll: %v", err)
-	}
-	yaml := "changelog: HISTORY.md\n"
-	if err := afero.WriteFile(fsys, config.ConfigFilePath, []byte(yaml), 0o644); err != nil {
-		t.Fatalf("WriteFile: %v", err)
-	}
+	writeConfigFile(t, fsys, "changelog: HISTORY.md\n")
 
 	cfg, err := config.Load(fsys, newFlagSet())
 	if err != nil {
@@ -85,17 +99,66 @@ func TestLoad_PartialConfigFallsBackToDefaults(t *testing.T) {
 	if cfg.TagPrefix != "v" {
 		t.Errorf("TagPrefix = %q, want default %q", cfg.TagPrefix, "v")
 	}
+	assertConventional(t, cfg.Conventional, defaultConventional())
+}
+
+func TestLoad_PartialConventionalFallsBackToDefaults(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n  major:\n    - custom\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := defaultConventional()
+	want["major"] = []string{"custom"}
+	assertConventional(t, cfg.Conventional, want)
+}
+
+func TestLoad_EmptyConventionalBlockReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for empty conventional block")
+	}
+	if !strings.Contains(err.Error(), "conventional must contain at least one key") {
+		t.Fatalf("error = %v, want conventional empty-block message", err)
+	}
+}
+
+func TestLoad_UnknownConventionalKeyReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n  unknown:\n    - x\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for unknown conventional key")
+	}
+	if !strings.Contains(err.Error(), `unknown conventional key "unknown"`) {
+		t.Fatalf("error = %v, want unknown key message", err)
+	}
+}
+
+func TestLoad_EmptyConventionalSliceHonored(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n  major: []\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := defaultConventional()
+	want["major"] = []string{}
+	assertConventional(t, cfg.Conventional, want)
 }
 
 func TestLoad_CLIFlagWinsOverConfigFile(t *testing.T) {
 	fsys := afero.NewMemMapFs()
-	if err := fsys.MkdirAll(".changes", 0o755); err != nil {
-		t.Fatalf("MkdirAll: %v", err)
-	}
-	yaml := "since: develop\n"
-	if err := afero.WriteFile(fsys, config.ConfigFilePath, []byte(yaml), 0o644); err != nil {
-		t.Fatalf("WriteFile: %v", err)
-	}
+	writeConfigFile(t, fsys, "since: develop\n")
 
 	flags := newFlagSet()
 	if err := flags.Set("since", "release-branch"); err != nil {

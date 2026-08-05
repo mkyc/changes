@@ -222,16 +222,16 @@ now error instead of silently producing unexpected mappings.
 
 #### Manual
 
-- [ ] 1.3 None beyond automated
+- [x] 1.3 None beyond automated
 
 ### Phase 2: Tests
 
 #### Automated
 
-- [ ] 2.1 Unit tests pass: `go test ./internal/config/...`
-- [ ] 2.2 New test `TestLoad_PartialConventionalFallsBackToDefaults` exists and passes
-- [ ] 2.3 Existing tests `TestLoad_Defaults`, `TestLoad_PartialConfigFallsBackToDefaults`, and `TestLoad_CLIFlagWinsOverConfigFile` remain green
+- [x] 2.1 Unit tests pass: `go test ./internal/config/...`
+- [x] 2.2 New test `TestLoad_PartialConventionalFallsBackToDefaults` exists and passes
+- [x] 2.3 Existing tests `TestLoad_Defaults`, `TestLoad_PartialConfigFallsBackToDefaults`, and `TestLoad_CLIFlagWinsOverConfigFile` remain green
 
 #### Manual
 
-- [ ] 2.4 None beyond automated
+- [x] 2.4 None beyond automated

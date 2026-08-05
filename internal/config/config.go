@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"go.yaml.in/yaml/v3"
 )
 
 // ConfigFilePath is the location of the optional project config file,
@@ -45,15 +46,42 @@ func defaultConventional() map[string][]string {
 	}
 }
 
-func mergeConventional(v *viper.Viper, configFileRead bool) (map[string][]string, error) {
+func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
+	var doc struct {
+		Conventional yaml.Node `yaml:"conventional"`
+	}
+	if err := yaml.Unmarshal(data, &doc); err != nil {
+		return nil, false, err
+	}
+	if doc.Conventional.Kind == 0 {
+		return nil, false, nil
+	}
+	if doc.Conventional.Kind == yaml.MappingNode && len(doc.Conventional.Content) == 0 {
+		return nil, true, errors.New("conventional must contain at least one key")
+	}
+
+	var fileConv map[string][]string
+	if err := doc.Conventional.Decode(&fileConv); err != nil {
+		return nil, true, err
+	}
+	if len(fileConv) == 0 {
+		return nil, true, errors.New("conventional must contain at least one key")
+	}
+	return fileConv, true, nil
+}
+
+func mergeConventional(data []byte, configFileRead bool) (map[string][]string, error) {
 	merged := defaultConventional()
 	if !configFileRead {
 		return merged, nil
 	}
 
-	fileConv := v.GetStringMapStringSlice("conventional")
-	if len(fileConv) == 0 {
-		return nil, errors.New("conventional must contain at least one key")
+	fileConv, present, err := fileConventionalFromYAML(data)
+	if err != nil {
+		return nil, err
+	}
+	if !present {
+		return merged, nil
 	}
 
 	for key, val := range fileConv {
@@ -95,7 +123,7 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 		}
 	}
 
-	conventional, err := mergeConventional(v, configFileRead)
+	conventional, err := mergeConventional(data, configFileRead)
 	if err != nil {
 		return nil, err
 	}
