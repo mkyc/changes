@@ -1,7 +1,7 @@
 ---
 change_id: introduce-taskfile
 title: Introduce Taskfile for build, test, doctor, cleanup
-status: new
+status: planned
 created: 2026-08-05
 updated: 2026-08-05
 archived_at: null
