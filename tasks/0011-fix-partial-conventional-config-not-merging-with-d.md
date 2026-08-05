@@ -1,7 +1,7 @@
 ---
 title: "Fix partial conventional config not merging with defaults"
 id: "0011"
-status: in-progress
+status: in-review
 priority: high
 type: bug
 tags: ["config", "bootstrap-go-cli"]
@@ -43,10 +43,10 @@ remains; `minor`, `patch`, and `none` defaults are lost.
 
 ## Tasks
 
-- [ ] After `ReadConfig`, deep-merge file `conventional` keys onto
+- [x] After `ReadConfig`, deep-merge file `conventional` keys onto
       `defaultConventional()` (per-key slice replacement, not whole-map
       replacement).
-- [ ] Add `TestLoad_PartialConventionalFallsBackToDefaults` mirroring the
+- [x] Add `TestLoad_PartialConventionalFallsBackToDefaults` mirroring the
       existing scalar partial-fallback test.
 
 ## Acceptance Criteria
