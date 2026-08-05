@@ -13,7 +13,7 @@ func main() {
 	root := cli.NewRootCmd(deps)
 
 	if err := root.Execute(); err != nil {
-		fmt.Fprintf(deps.Stderr, "error: %s\n", err)
+		_, _ = fmt.Fprintf(deps.Stderr, "error: %s\n", err)
 		os.Exit(1)
 	}
 }
