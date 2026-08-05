@@ -217,8 +217,8 @@ now error instead of silently producing unexpected mappings.
 
 #### Automated
 
-- [ ] 1.1 Package builds: `go build ./internal/config/...`
-- [ ] 1.2 Unit tests pass: `go test ./internal/config/...`
+- [x] 1.1 Package builds: `go build ./internal/config/...`
+- [x] 1.2 Unit tests pass: `go test ./internal/config/...`
 
 #### Manual
 

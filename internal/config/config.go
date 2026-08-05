@@ -6,6 +6,7 @@ package config
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/fs"
 
 	"github.com/spf13/afero"
@@ -16,6 +17,13 @@ import (
 // ConfigFilePath is the location of the optional project config file,
 // relative to the working directory.
 const ConfigFilePath = ".changes/config.yaml"
+
+var allowedConventionalKeys = map[string]struct{}{
+	"major": {},
+	"minor": {},
+	"patch": {},
+	"none":  {},
+}
 
 // Config is the fully resolved configuration used by every subcommand.
 type Config struct {
@@ -37,6 +45,26 @@ func defaultConventional() map[string][]string {
 	}
 }
 
+func mergeConventional(v *viper.Viper, configFileRead bool) (map[string][]string, error) {
+	merged := defaultConventional()
+	if !configFileRead {
+		return merged, nil
+	}
+
+	fileConv := v.GetStringMapStringSlice("conventional")
+	if len(fileConv) == 0 {
+		return nil, errors.New("conventional must contain at least one key")
+	}
+
+	for key, val := range fileConv {
+		if _, ok := allowedConventionalKeys[key]; !ok {
+			return nil, fmt.Errorf("unknown conventional key %q", key)
+		}
+		merged[key] = val
+	}
+	return merged, nil
+}
+
 // Load resolves a Config by layering built-in defaults, then
 // .changes/config.yaml if present, then CLI flag overrides. A missing
 // config file is not an error.
@@ -54,7 +82,8 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 	if err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return nil, err
 	}
-	if err == nil {
+	configFileRead := err == nil
+	if configFileRead {
 		if err := v.ReadConfig(bytes.NewReader(data)); err != nil {
 			return nil, err
 		}
@@ -66,9 +95,9 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 		}
 	}
 
-	conventional := map[string][]string{}
-	for key, val := range v.GetStringMapStringSlice("conventional") {
-		conventional[key] = val
+	conventional, err := mergeConventional(v, configFileRead)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Config{
