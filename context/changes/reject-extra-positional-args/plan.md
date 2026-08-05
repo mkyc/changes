@@ -131,12 +131,12 @@ None.
 
 #### Automated
 
-- [x] 1.1 All CLI tests pass: `go test ./internal/cli/...`
-- [x] 1.2 New test passes and existing test still passes: `go test ./internal/cli/... -run 'TestSubcommands' -v`
-- [x] 1.3 Full test suite passes: `task test`
-- [x] 1.4 Lint/vet/fmt clean: `task doctor`
+- [x] 1.1 All CLI tests pass: `go test ./internal/cli/...` — 8f73635
+- [x] 1.2 New test passes and existing test still passes: `go test ./internal/cli/... -run 'TestSubcommands' -v` — 8f73635
+- [x] 1.3 Full test suite passes: `task test` — 8f73635
+- [x] 1.4 Lint/vet/fmt clean: `task doctor` — 8f73635
 
 #### Manual
 
-- [x] 1.5 `bin/changes init foo` exits non-zero with an error message
-- [x] 1.6 `bin/changes propose --since HEAD~1` (no positional args) still succeeds silently
+- [x] 1.5 `bin/changes init foo` exits non-zero with an error message — 8f73635
+- [x] 1.6 `bin/changes propose --since HEAD~1` (no positional args) still succeeds silently — 8f73635
