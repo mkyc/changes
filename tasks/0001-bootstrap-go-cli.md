@@ -20,15 +20,15 @@ works without `.changes/config.yaml`.
 
 ## Tasks
 
-- [ ] Initialize the Go module and add an executable `changes` entry point.
-- [ ] Add a root command with `init`, `propose`, `apply`, and `check` subcommands.
-- [ ] Define configuration values for package path, changelog path, base ref,
+- [x] Initialize the Go module and add an executable `changes` entry point.
+- [x] Add a root command with `init`, `propose`, `apply`, and `check` subcommands.
+- [x] Define configuration values for package path, changelog path, base ref,
       tag prefix, and conventional-commit increment mappings.
-- [ ] Implement defaults of package `.`, changelog `CHANGELOG.md`, base ref
+- [x] Implement defaults of package `.`, changelog `CHANGELOG.md`, base ref
       `main`, and tag prefix `v` when no config file exists.
-- [ ] Make command dependencies such as the clock, filesystem, Git runner, and
+- [x] Make command dependencies such as the clock, filesystem, Git runner, and
       standard streams injectable for deterministic tests.
-- [ ] Add smoke tests for command discovery, default loading, and exit behavior.
+- [x] Add smoke tests for command discovery, default loading, and exit behavior.
 
 ## Acceptance Criteria
 
