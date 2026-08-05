@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the changes binary
+    cmds:
+      - go build -o bin/changes .
+
+  test:
+    desc: Run the test suite
+    cmds:
+      - go test ./... -v
+
+  doctor:
+    desc: Run formatting, vet, module-tidiness, and lint checks
+    cmds:
+      - test -z "$(gofmt -l .)"
+      - go vet ./...
+      - go mod tidy
+      - git diff --exit-code go.mod go.sum
+      - golangci-lint run
+
+  cleanup:
+    desc: Remove build output and clear the Go build/test cache
+    cmds:
+      - rm -rf bin
+      - go clean -testcache -cache

@@ -124,13 +124,13 @@ None — no existing build tooling to migrate from or deprecate.
 
 #### Automated
 
-- [ ] 1.1 `task build` succeeds and produces an executable at `bin/changes`
-- [ ] 1.2 `task test` succeeds
-- [ ] 1.3 `task doctor` succeeds on a clean tree
-- [ ] 1.4 `task cleanup` removes `bin/`
-- [ ] 1.5 `bin/` is not tracked by git after a build
+- [x] 1.1 `task build` succeeds and produces an executable at `bin/changes`
+- [x] 1.2 `task test` succeeds
+- [x] 1.3 `task doctor` succeeds on a clean tree
+- [x] 1.4 `task cleanup` removes `bin/`
+- [x] 1.5 `bin/` is not tracked by git after a build
 
 #### Manual
 
-- [ ] 1.6 `bin/changes --help` behaves like the existing binary
-- [ ] 1.7 `task doctor` correctly flags a deliberately introduced issue, then passes again after revert
+- [x] 1.6 `bin/changes --help` behaves like the existing binary
+- [x] 1.7 `task doctor` correctly flags a deliberately introduced issue, then passes again after revert
