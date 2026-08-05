@@ -224,3 +224,17 @@ func TestLoad_EmptyConfigValueFallsBackToDefault(t *testing.T) {
 		t.Errorf("Since = %q, want default %q", cfg.Since, "main")
 	}
 }
+
+func TestLoad_BareNullConfigValueFallsBackToDefault(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "since:\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if cfg.Since != "main" {
+		t.Errorf("Since = %q, want default %q", cfg.Since, "main")
+	}
+}
