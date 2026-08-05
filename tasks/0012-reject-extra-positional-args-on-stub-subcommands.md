@@ -1,7 +1,7 @@
 ---
 title: "Reject extra positional args on stub subcommands"
 id: "0012"
-status: pending
+status: in-progress
 priority: medium
 type: bug
 tags: ["cli", "bootstrap-go-cli"]
