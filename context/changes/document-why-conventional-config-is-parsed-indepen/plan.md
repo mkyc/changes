@@ -96,6 +96,6 @@ None.
 
 #### Automated
 
-- [ ] 1.1 `go build ./internal/config/...` passes
-- [ ] 1.2 `task test` passes
-- [ ] 1.3 `task doctor` passes
+- [x] 1.1 `go build ./internal/config/...` passes
+- [x] 1.2 `task test` passes
+- [x] 1.3 `task doctor` passes

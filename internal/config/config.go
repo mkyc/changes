@@ -49,6 +49,10 @@ func defaultConventional() map[string][]string {
 	}
 }
 
+// fileConventionalFromYAML parses the conventional block directly instead of
+// reading it from v, because Viper's typed getters can't distinguish an
+// absent key from one that's present but empty — exactly the distinction
+// the empty-block validation below needs.
 func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 	var doc struct {
 		Conventional yaml.Node `yaml:"conventional"`
