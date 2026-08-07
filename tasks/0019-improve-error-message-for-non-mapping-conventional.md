@@ -1,7 +1,7 @@
 ---
 title: "Improve error message for non-mapping conventional config value"
 id: "0019"
-status: in-progress
+status: completed
 priority: low
 type: chore
 tags: ["config"]
@@ -30,14 +30,14 @@ Source: impl review F3 —
 
 ## Tasks
 
-- [ ] Add a check on `doc.Conventional.Kind` before `Decode` and return a
+- [x] Add a check on `doc.Conventional.Kind` before `Decode` and return a
       descriptive error (e.g. "conventional must be a mapping of keys to
       lists") when it isn't a mapping node.
-- [ ] Add a test asserting the improved error message for a non-mapping
+- [x] Add a test asserting the improved error message for a non-mapping
       `conventional:` value.
 
 ## Acceptance Criteria
 
-- [ ] Non-mapping `conventional:` values produce a clear, actionable error
+- [x] Non-mapping `conventional:` values produce a clear, actionable error
       message consistent with the file's other validation errors.
-- [ ] `go test ./internal/config/...` passes, including the new test.
+- [x] `go test ./internal/config/...` passes, including the new test.
