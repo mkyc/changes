@@ -1,7 +1,7 @@
 ---
 title: "Accept YAML aliases for conventional config mapping"
 id: "0020"
-status: in-progress
+status: completed
 priority: medium
 type: bug
 tags: ["config"]
@@ -44,19 +44,19 @@ guard rejects it before `Decode`.
 
 ## Tasks
 
-- [ ] Resolve aliases (follow `Node.Alias`) before the mapping-kind check in
+- [x] Resolve aliases (follow `Node.Alias`) before the mapping-kind check in
       `fileConventionalFromYAML`, or only emit the friendly non-mapping error
       when `Decode` fails for a non-mapping shape.
-- [ ] Add a regression test for `conventional: *anchor` that expects a
+- [x] Add a regression test for `conventional: *anchor` that expects a
       successful load (or a merge-equivalent result).
 
 ## Acceptance Criteria
 
-- [ ] Valid alias-to-mapping `conventional:` configs load without error.
-- [ ] Sequence/scalar non-mapping cases from 0019 still return
+- [x] Valid alias-to-mapping `conventional:` configs load without error.
+- [x] Sequence/scalar non-mapping cases from 0019 still return
       `conventional must be a mapping of keys to lists`.
-- [ ] Bare `conventional:` / `!!null` still hits the empty-key path.
-- [ ] `go test ./internal/config/...` passes, including the new alias test.
+- [x] Bare `conventional:` / `!!null` still hits the empty-key path.
+- [x] `go test ./internal/config/...` passes, including the new alias test.
 
 ## References
 
