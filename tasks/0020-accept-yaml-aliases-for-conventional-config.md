@@ -1,7 +1,7 @@
 ---
 title: "Accept YAML aliases for conventional config mapping"
 id: "0020"
-status: pending
+status: in-progress
 priority: medium
 type: bug
 tags: ["config"]
