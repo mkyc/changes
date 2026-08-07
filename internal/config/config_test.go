@@ -225,6 +225,19 @@ func TestLoad_EmptyConfigValueFallsBackToDefault(t *testing.T) {
 	}
 }
 
+func TestLoad_InvalidConfigReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "changelog: [unterminated\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for malformed YAML")
+	}
+	if cfg != nil {
+		t.Errorf("expected nil Config on error, got %+v", cfg)
+	}
+}
+
 func TestLoad_BareNullConfigValueFallsBackToDefault(t *testing.T) {
 	fsys := afero.NewMemMapFs()
 	writeConfigFile(t, fsys, "since:\n")
