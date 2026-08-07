@@ -59,9 +59,6 @@ func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 	if doc.Conventional.Kind == 0 {
 		return nil, false, nil
 	}
-	if doc.Conventional.Kind == yaml.MappingNode && len(doc.Conventional.Content) == 0 {
-		return nil, true, errors.New("conventional must contain at least one key")
-	}
 
 	var fileConv map[string][]string
 	if err := doc.Conventional.Decode(&fileConv); err != nil {

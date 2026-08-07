@@ -129,6 +129,19 @@ func TestLoad_EmptyConventionalBlockReturnsError(t *testing.T) {
 	}
 }
 
+func TestLoad_EmptyMappingConventionalReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional: {}\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for empty mapping conventional block")
+	}
+	if !strings.Contains(err.Error(), "conventional must contain at least one key") {
+		t.Fatalf("error = %v, want conventional empty-block message", err)
+	}
+}
+
 func TestLoad_UnknownConventionalKeyReturnsError(t *testing.T) {
 	fsys := afero.NewMemMapFs()
 	writeConfigFile(t, fsys, "conventional:\n  unknown:\n    - x\n")
