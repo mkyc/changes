@@ -1,7 +1,7 @@
 ---
 title: "Add test for malformed config file error"
 id: "0016"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["test", "config", "bootstrap-go-cli"]
