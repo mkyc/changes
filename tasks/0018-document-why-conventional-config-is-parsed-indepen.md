@@ -1,7 +1,7 @@
 ---
 title: "Document why conventional config is parsed independently of Viper"
 id: "0018"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["config", "docs"]
