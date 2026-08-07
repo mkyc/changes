@@ -116,7 +116,7 @@ None — this is a strictly additive error-message improvement; valid configs co
 
 #### Automated
 
-- [ ] 1.1 Unit tests pass: `go test ./internal/config/...`
-- [ ] 1.2 Unit tests pass: `go test ./internal/cli/...`
-- [ ] 1.3 Full test suite passes: `go test ./...`
-- [ ] 1.4 Vet passes: `go vet ./...`
+- [x] 1.1 Unit tests pass: `go test ./internal/config/...`
+- [x] 1.2 Unit tests pass: `go test ./internal/cli/...`
+- [x] 1.3 Full test suite passes: `go test ./...`
+- [x] 1.4 Vet passes: `go vet ./...`

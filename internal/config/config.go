@@ -71,9 +71,14 @@ func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 		return nil, true, errors.New("conventional must be a mapping of keys to lists")
 	}
 
-	var fileConv map[string][]string
-	if err := doc.Conventional.Decode(&fileConv); err != nil {
-		return nil, true, err
+	fileConv := make(map[string][]string, len(resolved.Content)/2)
+	for i := 0; i < len(resolved.Content); i += 2 {
+		key := resolved.Content[i].Value
+		var val []string
+		if err := resolved.Content[i+1].Decode(&val); err != nil {
+			return nil, true, fmt.Errorf("conventional.%s must be a list of strings", key)
+		}
+		fileConv[key] = val
 	}
 	if len(fileConv) == 0 {
 		return nil, true, errors.New("conventional must contain at least one key")

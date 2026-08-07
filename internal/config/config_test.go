@@ -155,6 +155,22 @@ func TestLoad_UnknownConventionalKeyReturnsError(t *testing.T) {
 	}
 }
 
+func TestLoad_NestedWrongTypeConventionalReturnsSingleLineError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n  major: feat\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for nested wrong-type conventional value")
+	}
+	if !strings.Contains(err.Error(), "conventional.major must be a list of strings") {
+		t.Fatalf("error = %v, want nested wrong-type message", err)
+	}
+	if strings.Contains(err.Error(), "\n") {
+		t.Fatalf("error = %q, want no embedded newlines", err.Error())
+	}
+}
+
 func TestLoad_SequenceConventionalReturnsError(t *testing.T) {
 	fsys := afero.NewMemMapFs()
 	writeConfigFile(t, fsys, "conventional:\n  - a\n  - b\n")
