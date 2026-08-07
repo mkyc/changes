@@ -1,7 +1,7 @@
 ---
 title: "Verify or remove redundant empty-mapping guard in conventional config parsing"
 id: "0017"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["config", "cleanup"]
