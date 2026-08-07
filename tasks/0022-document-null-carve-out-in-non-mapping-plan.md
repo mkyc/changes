@@ -1,7 +1,7 @@
 ---
 title: "Document !!null carve-out in non-mapping conventional plan"
 id: "0022"
-status: pending
+status: cancelled
 priority: low
 type: chore
 tags: ["config", "docs"]

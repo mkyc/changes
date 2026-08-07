@@ -1,7 +1,7 @@
 ---
 title: "Tighten D011 failure-path test for single-line stderr"
 id: "0023"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["cli", "testing"]
