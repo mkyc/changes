@@ -1,7 +1,7 @@
 ---
 title: "Normalize nested conventional decode errors to one line"
 id: "0021"
-status: in-progress
+status: completed
 priority: medium
 type: bug
 tags: ["config", "cli"]
@@ -49,19 +49,19 @@ Through `cli.Run` this becomes multi-line stderr and violates D011.
 
 ## Tasks
 
-- [ ] In `fileConventionalFromYAML`, wrap or replace `Decode` failures with a
+- [#] In `fileConventionalFromYAML`, wrap or replace `Decode` failures with a
       single-line message (prefer naming the offending key when practical).
-- [ ] Add a unit test for a nested wrong-type value asserting a one-line
+- [#] Add a unit test for a nested wrong-type value asserting a one-line
       error with no embedded newlines.
-- [ ] Optionally add a `cli.Run` case with memfs invalid conventional config
+- [#] Optionally add a `cli.Run` case with memfs invalid conventional config
       asserting exit `1`, empty stdout, and single-line `error: …` stderr.
 
 ## Acceptance Criteria
 
-- [ ] Nested conventional type errors never embed newlines in `err.Error()`.
-- [ ] Top-level non-mapping / empty-block messages from 0017/0019 remain
+- [#] Nested conventional type errors never embed newlines in `err.Error()`.
+- [#] Top-level non-mapping / empty-block messages from 0017/0019 remain
       unchanged.
-- [ ] `go test ./internal/config/...` (and `./internal/cli/...` if a Run case
+- [#] `go test ./internal/config/...` (and `./internal/cli/...` if a Run case
       is added) passes.
 
 ## References
