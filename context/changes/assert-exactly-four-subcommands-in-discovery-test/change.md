@@ -1,7 +1,7 @@
 ---
 change_id: assert-exactly-four-subcommands-in-discovery-test
 title: Tighten discovery test to assert exactly four subcommands
-status: implementing
+status: implemented
 created: 2026-08-07
 updated: 2026-08-07
 archived_at: null
