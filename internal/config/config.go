@@ -63,6 +63,9 @@ func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 	if doc.Conventional.Kind == 0 {
 		return nil, false, nil
 	}
+	if doc.Conventional.Kind != yaml.MappingNode && doc.Conventional.Tag != "!!null" {
+		return nil, true, errors.New("conventional must be a mapping of keys to lists")
+	}
 
 	var fileConv map[string][]string
 	if err := doc.Conventional.Decode(&fileConv); err != nil {

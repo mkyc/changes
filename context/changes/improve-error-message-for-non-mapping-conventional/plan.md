@@ -100,6 +100,6 @@ None — this is a strictly additive validation improving an error message; no c
 
 #### Automated
 
-- [ ] 1.1 Unit tests pass: `go test ./internal/config/...`
-- [ ] 1.2 Full test suite passes: `go test ./...`
-- [ ] 1.3 Vet passes: `go vet ./...`
+- [x] 1.1 Unit tests pass: `go test ./internal/config/...`
+- [x] 1.2 Full test suite passes: `go test ./...`
+- [x] 1.3 Vet passes: `go vet ./...`

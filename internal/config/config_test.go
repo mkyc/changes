@@ -155,6 +155,32 @@ func TestLoad_UnknownConventionalKeyReturnsError(t *testing.T) {
 	}
 }
 
+func TestLoad_SequenceConventionalReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional:\n  - a\n  - b\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for sequence conventional value")
+	}
+	if !strings.Contains(err.Error(), "conventional must be a mapping of keys to lists") {
+		t.Fatalf("error = %v, want non-mapping message", err)
+	}
+}
+
+func TestLoad_ScalarConventionalReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "conventional: scalar\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for scalar conventional value")
+	}
+	if !strings.Contains(err.Error(), "conventional must be a mapping of keys to lists") {
+		t.Fatalf("error = %v, want non-mapping message", err)
+	}
+}
+
 func TestLoad_EmptyConventionalSliceHonored(t *testing.T) {
 	fsys := afero.NewMemMapFs()
 	writeConfigFile(t, fsys, "conventional:\n  major: []\n")
