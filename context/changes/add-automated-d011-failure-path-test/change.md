@@ -1,7 +1,7 @@
 ---
 change_id: add-automated-d011-failure-path-test
 title: Automate the D011 unknown-subcommand error-contract test
-status: planned
+status: implementing
 created: 2026-08-07
 updated: 2026-08-07
 archived_at: null

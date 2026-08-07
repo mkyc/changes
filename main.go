@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/mkyc/changes/internal/app"
@@ -10,10 +9,5 @@ import (
 
 func main() {
 	deps := app.NewRealDeps()
-	root := cli.NewRootCmd(deps)
-
-	if err := root.Execute(); err != nil {
-		_, _ = fmt.Fprintf(deps.Stderr, "error: %s\n", err)
-		os.Exit(1)
-	}
+	os.Exit(cli.Run(deps, os.Args[1:]))
 }

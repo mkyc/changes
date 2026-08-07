@@ -1,6 +1,7 @@
 package cli_test
 
 import (
+	"regexp"
 	"testing"
 	"time"
 
@@ -97,5 +98,21 @@ func TestSubcommands_RejectExtraPositionalArgs(t *testing.T) {
 				t.Errorf("Execute(%s, extra-arg): expected non-empty error message", name)
 			}
 		})
+	}
+}
+
+func TestRun_UnknownSubcommandFollowsD011Contract(t *testing.T) {
+	deps, stdout, stderr := app.NewFakeDeps(time.Now())
+
+	code := cli.Run(deps, []string{"bogus"})
+
+	if code != 1 {
+		t.Errorf("Run(bogus): expected exit code 1, got %d", code)
+	}
+	if stdout.Len() != 0 {
+		t.Errorf("Run(bogus): expected empty stdout, got %q", stdout.String())
+	}
+	if !regexp.MustCompile(`^error: `).MatchString(stderr.String()) {
+		t.Errorf("Run(bogus): expected stderr to match %q, got %q", `^error: `, stderr.String())
 	}
 }
