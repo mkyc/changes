@@ -121,5 +121,5 @@ None — `main.go`'s real-world behavior (real `os.Args`, real `os.Exit`) is unc
 
 #### Automated
 
-- [x] 1.1 `task test` passes
-- [x] 1.2 `task doctor` passes
+- [x] 1.1 `task test` passes — c0e2416
+- [x] 1.2 `task doctor` passes — c0e2416
