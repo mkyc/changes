@@ -1,7 +1,7 @@
 ---
 title: "Document why conventional config is parsed independently of Viper"
 id: "0018"
-status: in-progress
+status: completed
 priority: low
 type: chore
 tags: ["config", "docs"]
@@ -27,13 +27,13 @@ Source: impl review F2 —
 
 ## Tasks
 
-- [ ] Add a one-line comment at `fileConventionalFromYAML` (or nearby)
+- [x] Add a one-line comment at `fileConventionalFromYAML` (or nearby)
       explaining why it parses raw YAML instead of reading `conventional`
       from `v`: to preserve the null-vs-empty-vs-populated distinction that
       Viper's `GetStringMapStringSlice` collapses.
 
 ## Acceptance Criteria
 
-- [ ] Comment added; no behavior change.
-- [ ] `go build ./internal/config/...` and `go test ./internal/config/...`
+- [x] Comment added; no behavior change.
+- [x] `go build ./internal/config/...` and `go test ./internal/config/...`
       pass.
