@@ -1,7 +1,7 @@
 ---
 title: "Treat empty --since flag as unset in config loader"
 id: "0013"
-status: pending
+status: completed
 priority: medium
 type: bug
 tags: ["config", "bootstrap-go-cli"]
@@ -33,9 +33,9 @@ to the file value or the built-in default `"main"`.
 
 ## Tasks
 
-- [ ] In `config.Load`, skip the CLI override when `since == ""` even if
+- [x] In `config.Load`, skip the CLI override when `since == ""` even if
       `flags.Changed("since")` is true (recommended Fix A from impl review).
-- [ ] Add a unit test asserting empty `--since` preserves the default `"main"`.
+- [x] Add a unit test asserting empty `--since` preserves the default `"main"`.
 
 ## Acceptance Criteria
 

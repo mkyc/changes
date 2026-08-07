@@ -15,9 +15,12 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-// ConfigFilePath is the location of the optional project config file,
-// relative to the working directory.
-const ConfigFilePath = ".changes/config.yaml"
+const (
+	// ConfigFilePath is the location of the optional project config file,
+	// relative to the working directory.
+	ConfigFilePath = ".changes/config.yaml"
+	defaultSince   = "main"
+)
 
 var allowedConventionalKeys = map[string]struct{}{
 	"major": {},
@@ -46,6 +49,10 @@ func defaultConventional() map[string][]string {
 	}
 }
 
+// fileConventionalFromYAML parses the conventional block directly instead of
+// reading it from v, because Viper's typed getters can't distinguish an
+// absent key from one that's present but empty — exactly the distinction
+// the empty-block validation below needs.
 func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 	var doc struct {
 		Conventional yaml.Node `yaml:"conventional"`
@@ -56,13 +63,22 @@ func fileConventionalFromYAML(data []byte) (map[string][]string, bool, error) {
 	if doc.Conventional.Kind == 0 {
 		return nil, false, nil
 	}
-	if doc.Conventional.Kind == yaml.MappingNode && len(doc.Conventional.Content) == 0 {
-		return nil, true, errors.New("conventional must contain at least one key")
+	resolved := &doc.Conventional
+	for resolved.Kind == yaml.AliasNode && resolved.Alias != nil {
+		resolved = resolved.Alias
+	}
+	if resolved.Kind != yaml.MappingNode && resolved.Tag != "!!null" {
+		return nil, true, errors.New("conventional must be a mapping of keys to lists")
 	}
 
-	var fileConv map[string][]string
-	if err := doc.Conventional.Decode(&fileConv); err != nil {
-		return nil, true, err
+	fileConv := make(map[string][]string, len(resolved.Content)/2)
+	for i := 0; i < len(resolved.Content); i += 2 {
+		key := resolved.Content[i].Value
+		var val []string
+		if err := resolved.Content[i+1].Decode(&val); err != nil {
+			return nil, true, fmt.Errorf("conventional.%s must be a list of strings", key)
+		}
+		fileConv[key] = val
 	}
 	if len(fileConv) == 0 {
 		return nil, true, errors.New("conventional must contain at least one key")
@@ -102,7 +118,7 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 
 	v.SetDefault("package", ".")
 	v.SetDefault("changelog", "CHANGELOG.md")
-	v.SetDefault("since", "main")
+	v.SetDefault("since", defaultSince)
 	v.SetDefault("tag_prefix", "v")
 	v.SetDefault("conventional", defaultConventional())
 
@@ -118,9 +134,13 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 	}
 
 	if flags != nil {
-		if since, err := flags.GetString("since"); err == nil && flags.Changed("since") {
+		if since, err := flags.GetString("since"); err == nil && flags.Changed("since") && since != "" {
 			v.Set("since", since)
 		}
+	}
+	since := v.GetString("since")
+	if since == "" {
+		since = defaultSince
 	}
 
 	conventional, err := mergeConventional(data, configFileRead)
@@ -131,7 +151,7 @@ func Load(fsys afero.Fs, flags *pflag.FlagSet) (*Config, error) {
 	return &Config{
 		Package:      v.GetString("package"),
 		Changelog:    v.GetString("changelog"),
-		Since:        v.GetString("since"),
+		Since:        since,
 		TagPrefix:    v.GetString("tag_prefix"),
 		Conventional: conventional,
 	}, nil

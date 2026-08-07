@@ -1,7 +1,7 @@
 ---
 title: "Verify or remove redundant empty-mapping guard in conventional config parsing"
 id: "0017"
-status: pending
+status: completed
 priority: low
 type: chore
 tags: ["config", "cleanup"]
@@ -26,16 +26,16 @@ Source: impl review F1 —
 
 ## Tasks
 
-- [ ] Add a test case for `conventional: {}\n` (empty mapping) to confirm the
+- [x] Add a test case for `conventional: {}\n` (empty mapping) to confirm the
       guard is reachable and correct, OR remove the guard and rely solely on
       the post-decode `len(fileConv) == 0` check, which already covers both
       the null and empty-mapping forms.
-- [ ] Run `go test ./internal/config/...` to confirm no regressions.
+- [x] Run `go test ./internal/config/...` to confirm no regressions.
 
 ## Acceptance Criteria
 
-- [ ] Either a passing test exists for `conventional: {}` exercising the
+- [x] Either a passing test exists for `conventional: {}` exercising the
       guard, or the guard is removed and behavior is unchanged (same tests
       pass).
-- [ ] `go build ./internal/config/...` and `go test ./internal/config/...`
+- [x] `go build ./internal/config/...` and `go test ./internal/config/...`
       pass.

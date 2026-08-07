@@ -1,7 +1,7 @@
 ---
 title: "Add automated D011 failure-path test"
 id: "0015"
-status: pending
+status: completed
 priority: low
 type: chore
 tags: ["test", "bootstrap-go-cli"]
@@ -18,9 +18,9 @@ exit failure, stdout untouched) that is currently manual-only (Progress 4.7).
 
 ## Tasks
 
-- [ ] Add an in-process test executing an unknown subcommand via fake deps.
-- [ ] Assert stderr matches `^error: ` and stdout is empty.
-- [ ] Optionally extract `main`'s error handler for direct unit testing if
+- [x] Add an in-process test executing an unknown subcommand via fake deps.
+- [x] Assert stderr matches `^error: ` and stdout is empty.
+- [x] Optionally extract `main`'s error handler for direct unit testing if
       needed to avoid `os.Exit` in tests.
 
 ## Acceptance Criteria

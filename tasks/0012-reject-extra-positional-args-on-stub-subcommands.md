@@ -1,7 +1,7 @@
 ---
 title: "Reject extra positional args on stub subcommands"
 id: "0012"
-status: pending
+status: completed
 priority: medium
 type: bug
 tags: ["cli", "bootstrap-go-cli"]
@@ -33,9 +33,9 @@ ignored.
 
 ## Tasks
 
-- [ ] Set `Args: cobra.NoArgs` on `init`, `propose`, `apply`, and `check`
+- [x] Set `Args: cobra.NoArgs` on `init`, `propose`, `apply`, and `check`
       subcommands in `internal/cli/`.
-- [ ] Add a test asserting unknown positional args return an error via fake
+- [x] Add a test asserting unknown positional args return an error via fake
       deps.
 
 ## Acceptance Criteria

@@ -1,7 +1,7 @@
 ---
 title: "Assert exactly four subcommands in discovery test"
 id: "0014"
-status: pending
+status: completed
 priority: low
 type: chore
 tags: ["test", "bootstrap-go-cli"]
@@ -18,7 +18,7 @@ subcommands" requirement.
 
 ## Tasks
 
-- [ ] In `TestNewRootCmd_CommandDiscovery`, add
+- [x] In `TestNewRootCmd_CommandDiscovery`, add
       `if len(root.Commands()) != 4 { t.Errorf(...) }` after the presence
       loop.
 

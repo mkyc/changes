@@ -1,4 +1,4 @@
 dir: ./tasks
 web:
   port: 8080
-  auto_open_browser: false
+  auto_open_browser: true

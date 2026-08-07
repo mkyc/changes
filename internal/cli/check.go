@@ -11,6 +11,7 @@ func newCheckCmd(deps *app.Deps) *cobra.Command {
 	return &cobra.Command{
 		Use:   "check",
 		Short: "Validate changesets and changelog drift",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			_, err := config.Load(deps.FS, cmd.Flags())
 			return err
