@@ -1,7 +1,7 @@
 ---
 change_id: document-why-conventional-config-is-parsed-indepen
 title: Document why conventional config is parsed independently of Viper
-status: implementing
+status: implemented
 created: 2026-08-07
 updated: 2026-08-07
 archived_at: null
