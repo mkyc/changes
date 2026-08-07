@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 	"time"
 
@@ -114,5 +115,24 @@ func TestRun_UnknownSubcommandFollowsD011Contract(t *testing.T) {
 	}
 	if !regexp.MustCompile(`^error: `).MatchString(stderr.String()) {
 		t.Errorf("Run(bogus): expected stderr to match %q, got %q", `^error: `, stderr.String())
+	}
+}
+
+func TestRun_UnknownSubcommandStderrIsSingleLine(t *testing.T) {
+	deps, stdout, stderr := app.NewFakeDeps(time.Now())
+
+	code := cli.Run(deps, []string{"bogus"})
+
+	if code != 1 {
+		t.Errorf("Run(bogus): expected exit code 1, got %d", code)
+	}
+	if stdout.Len() != 0 {
+		t.Errorf("Run(bogus): expected empty stdout, got %q", stdout.String())
+	}
+	if !regexp.MustCompile(`^error: .+\n$`).MatchString(stderr.String()) {
+		t.Errorf("Run(bogus): expected stderr to match %q, got %q", `^error: .+\n$`, stderr.String())
+	}
+	if got := strings.Count(stderr.String(), "\n"); got != 1 {
+		t.Errorf("Run(bogus): expected exactly one newline in stderr, got %d in %q", got, stderr.String())
 	}
 }

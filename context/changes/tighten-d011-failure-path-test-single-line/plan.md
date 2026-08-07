@@ -88,6 +88,6 @@ None — test-only addition, no behavior or schema change.
 
 #### Automated
 
-- [ ] 1.1 Unit tests pass: `go test ./internal/cli/...`
-- [ ] 1.2 Full test suite passes: `go test ./...`
-- [ ] 1.3 Vet passes: `go vet ./...`
+- [x] 1.1 Unit tests pass: `go test ./internal/cli/...`
+- [x] 1.2 Full test suite passes: `go test ./...`
+- [x] 1.3 Vet passes: `go vet ./...`

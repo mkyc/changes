@@ -1,7 +1,7 @@
 ---
 change_id: tighten-d011-failure-path-test-single-line
 title: Tighten D011 failure-path test for single-line stderr
-status: planned
+status: implementing
 created: 2026-08-08
 updated: 2026-08-08
 archived_at: null
