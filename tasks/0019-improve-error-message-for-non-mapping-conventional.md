@@ -1,7 +1,7 @@
 ---
 title: "Improve error message for non-mapping conventional config value"
 id: "0019"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["config"]
