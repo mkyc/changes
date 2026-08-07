@@ -1,7 +1,7 @@
 ---
 title: "Tighten D011 failure-path test for single-line stderr"
 id: "0023"
-status: in-progress
+status: completed
 priority: low
 type: chore
 tags: ["cli", "testing"]
@@ -23,18 +23,18 @@ trailing newline, no embedded newlines.
 
 ## Tasks
 
-- [ ] Update `TestRun_UnknownSubcommandFollowsD011Contract` in
+- [x] Update `TestRun_UnknownSubcommandFollowsD011Contract` in
       `internal/cli/root_test.go` to assert something equivalent to
       `^error: .+\n$` and `strings.Count(stderr, "\n") == 1` (or a clear
       equivalent).
-- [ ] Keep the existing exit-code `1` and empty-stdout checks.
+- [x] Keep the existing exit-code `1` and empty-stdout checks.
 
 ## Acceptance Criteria
 
-- [ ] The D011 test fails if stderr has an empty message after `error: ` or
+- [x] The D011 test fails if stderr has an empty message after `error: ` or
       contains more than one newline.
-- [ ] Unknown-subcommand path still passes under the tightened contract.
-- [ ] `go test ./internal/cli/...` passes.
+- [x] Unknown-subcommand path still passes under the tightened contract.
+- [x] `go test ./internal/cli/...` passes.
 
 ## References
 
