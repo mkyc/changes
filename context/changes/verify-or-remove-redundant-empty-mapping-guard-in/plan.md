@@ -121,6 +121,6 @@ None — no behavior change; both empty forms (`conventional:` and `conventional
 
 #### Automated
 
-- [x] 1.1 `go build ./internal/config/...` passes
-- [x] 1.2 `task test` passes
-- [x] 1.3 `task doctor` passes
+- [x] 1.1 `go build ./internal/config/...` passes — 16e5a8b
+- [x] 1.2 `task test` passes — 16e5a8b
+- [x] 1.3 `task doctor` passes — 16e5a8b
