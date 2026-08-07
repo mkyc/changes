@@ -99,5 +99,5 @@ None.
 
 #### Automated
 
-- [x] 1.1 `task test` passes
-- [x] 1.2 `task doctor` passes
+- [x] 1.1 `task test` passes — b59b9eb
+- [x] 1.2 `task doctor` passes — b59b9eb
