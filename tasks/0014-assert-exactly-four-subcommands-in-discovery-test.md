@@ -1,7 +1,7 @@
 ---
 title: "Assert exactly four subcommands in discovery test"
 id: "0014"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["test", "bootstrap-go-cli"]
