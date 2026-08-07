@@ -1,7 +1,7 @@
 ---
 change_id: normalize-nested-conventional-decode-errors
 title: Normalize nested conventional decode errors to one line
-status: new
+status: planned
 created: 2026-08-08
 updated: 2026-08-08
 archived_at: null
