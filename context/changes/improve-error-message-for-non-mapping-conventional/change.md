@@ -1,7 +1,7 @@
 ---
 change_id: improve-error-message-for-non-mapping-conventional
 title: Improve error message for non-mapping conventional config value
-status: planned
+status: implemented
 created: 2026-08-07
 updated: 2026-08-07
 archived_at: null
