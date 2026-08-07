@@ -1,7 +1,7 @@
 ---
 title: "Add automated D011 failure-path test"
 id: "0015"
-status: pending
+status: in-progress
 priority: low
 type: chore
 tags: ["test", "bootstrap-go-cli"]
