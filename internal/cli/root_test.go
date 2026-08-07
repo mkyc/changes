@@ -23,6 +23,14 @@ func TestNewRootCmd_CommandDiscovery(t *testing.T) {
 			t.Errorf("expected subcommand %q to be registered", name)
 		}
 	}
+
+	if got := len(root.Commands()); got != 4 {
+		names := make([]string, 0, got)
+		for _, cmd := range root.Commands() {
+			names = append(names, cmd.Name())
+		}
+		t.Errorf("expected exactly 4 subcommands, got %d: %v", got, names)
+	}
 }
 
 func TestNewRootCmd_ProposeHasSinceFlag(t *testing.T) {
