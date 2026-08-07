@@ -181,6 +181,33 @@ func TestLoad_ScalarConventionalReturnsError(t *testing.T) {
 	}
 }
 
+func TestLoad_AliasToMappingConventionalSucceeds(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "defs:\n  conv: &conv\n    major:\n      - feat\nconventional: *conv\n")
+
+	cfg, err := config.Load(fsys, newFlagSet())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := defaultConventional()
+	want["major"] = []string{"feat"}
+	assertConventional(t, cfg.Conventional, want)
+}
+
+func TestLoad_AliasToSequenceConventionalReturnsError(t *testing.T) {
+	fsys := afero.NewMemMapFs()
+	writeConfigFile(t, fsys, "defs:\n  conv: &conv\n    - a\n    - b\nconventional: *conv\n")
+
+	_, err := config.Load(fsys, newFlagSet())
+	if err == nil {
+		t.Fatal("expected error for alias to sequence conventional value")
+	}
+	if !strings.Contains(err.Error(), "conventional must be a mapping of keys to lists") {
+		t.Fatalf("error = %v, want non-mapping message", err)
+	}
+}
+
 func TestLoad_EmptyConventionalSliceHonored(t *testing.T) {
 	fsys := afero.NewMemMapFs()
 	writeConfigFile(t, fsys, "conventional:\n  major: []\n")
