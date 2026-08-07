@@ -1,7 +1,7 @@
 ---
 title: "Add test for malformed config file error"
 id: "0016"
-status: in-progress
+status: completed
 priority: low
 type: chore
 tags: ["test", "config", "bootstrap-go-cli"]
@@ -17,8 +17,8 @@ Cover the error boundary when `.changes/config.yaml` contains invalid YAML.
 
 ## Tasks
 
-- [ ] Add `TestLoad_InvalidConfigReturnsError` in `internal/config/config_test.go`.
-- [ ] Write invalid YAML to the in-memory filesystem and assert `Load` returns
+- [x] Add `TestLoad_InvalidConfigReturnsError` in `internal/config/config_test.go`.
+- [x] Write invalid YAML to the in-memory filesystem and assert `Load` returns
       a non-nil error.
 
 ## Acceptance Criteria
