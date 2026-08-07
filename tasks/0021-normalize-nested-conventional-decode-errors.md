@@ -1,7 +1,7 @@
 ---
 title: "Normalize nested conventional decode errors to one line"
 id: "0021"
-status: pending
+status: in-progress
 priority: medium
 type: bug
 tags: ["config", "cli"]
